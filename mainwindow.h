@@ -3,10 +3,15 @@
 
 #include <QMainWindow>
 
+#include "scene.h"
+
 namespace Ui {
 class MainWindow;
 }
 
+/**
+ * @brief Fenêtre principale de l'application
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -17,6 +22,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    Scene *scene;
 };
 
 #endif // MAINWINDOW_H
