@@ -16,17 +16,21 @@ class MapBuilderWindow : public QMainWindow
 public:
     explicit MapBuilderWindow(QWidget *parent = 0);
     ~MapBuilderWindow();
+    void loadMap(const QJsonDocument loadData);
+    QJsonDocument saveMap();
 
 private slots:
     void on_groundBrickButton_toggled(bool checked);
-
     void on_solidBrickButton_toggled(bool checked);
-
     void on_platformBrickButton_toggled(bool checked);
-
     void on_bonusBoxButton_toggled(bool checked);
 
     void on_placeGroundButton_clicked();
+
+    void on_actionSauvegarder_le_niveau_triggered();
+    void on_actionCharger_un_niveau_triggered();
+
+    void on_actionNouveau_niveau_triggered();
 
 private:
     Ui::MapBuilderWindow *ui;

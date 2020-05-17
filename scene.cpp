@@ -5,7 +5,7 @@
 
 #include "rigidbody.h"
 
-Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 80000, 720, parent)
+Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, parent)
 {
     scroll = s;
     velocity = 7;
@@ -27,12 +27,14 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 80000, 720, pa
 
     // Timer pour le mouvement
     moveTimer = new QTimer(this);
+    moveTimer->setTimerType(Qt::PreciseTimer);
     moveTimer->setInterval(20); // <--- durée d'une frame en ms (donc fps ~= 1000/20 = 50)
     connect(moveTimer, &QTimer::timeout, this, &Scene::movePlayer);
 
     // Timer pour la chute
     fallTimer = new QTimer(this);
     fallTimer->setInterval(20); // <--- durée d'une frame en ms
+    moveTimer->setTimerType(Qt::PreciseTimer);
     connect(fallTimer, &QTimer::timeout, this, &Scene::fallPlayer);
 
     // Placement d'un bloc au sol sous le joueur

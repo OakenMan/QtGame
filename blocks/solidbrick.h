@@ -9,6 +9,7 @@ public:
     SolidBrick();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget);
+    int type() const override { return UserType + 3; }
 };
 
 #endif // SOLIDBRICK_H

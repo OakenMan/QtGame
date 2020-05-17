@@ -10,7 +10,7 @@
 
 #include "player.h"
 
-MapBuilder::MapBuilder(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 80000, 720, parent)
+MapBuilder::MapBuilder(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, parent)
 {
     scroll = s;
 
@@ -95,7 +95,7 @@ void MapBuilder::deleteBlock(QPointF pos)
 void MapBuilder::placeGround()
 {
     setCurrentBlock(bGroundBrick);
-    for(int i=0; i<80000/66; i++) {
+    for(int i=0; i<8000/66; i++) {
         placeBlock(QPointF(i*48, 672));
     }
 }

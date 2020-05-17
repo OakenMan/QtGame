@@ -9,6 +9,7 @@ public:
     GroundBrick();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget);
+    int type() const override { return UserType + 2; }
 };
 
 #endif // GROUNDBRICK_H

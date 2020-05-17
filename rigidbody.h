@@ -10,6 +10,7 @@ public:
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget);
+    int type() const override { return UserType + 1; }
 
 protected:
     QPixmap pixmap;
