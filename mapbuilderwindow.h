@@ -16,8 +16,6 @@ class MapBuilderWindow : public QMainWindow
 public:
     explicit MapBuilderWindow(QWidget *parent = 0);
     ~MapBuilderWindow();
-    void loadMap(const QJsonDocument loadData);
-    QJsonDocument saveMap();
 
 private slots:
     void on_groundBrickButton_toggled(bool checked);

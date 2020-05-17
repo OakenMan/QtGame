@@ -9,8 +9,8 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, par
 {
     scroll = s;
     velocity = 7;
-    jumpHeight = 200;
-    groundLevel = 660;
+    jumpHeight = 144;
+    groundLevel = 672;
 
     // Description de l'animation de saut
     jumpAnimation = new QPropertyAnimation(this);
@@ -19,7 +19,7 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, par
     jumpAnimation->setStartValue(0);
     jumpAnimation->setKeyValueAt(0.5, 1);
     jumpAnimation->setEndValue(0);
-    jumpAnimation->setDuration(800);
+    jumpAnimation->setDuration(700);
     jumpAnimation->setEasingCurve(QEasingCurve::OutInQuad);
 
     connect(this, &Scene::jumpFactorChanged, this, &Scene::jumpPlayer);

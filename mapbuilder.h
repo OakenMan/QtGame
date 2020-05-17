@@ -21,10 +21,14 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
+    virtual void drawBackground(QPainter *painter, const QRectF &rect);
+
 private:
     QScrollBar *scroll;
     Blocks currentBlock;
     int action;
+
+    QPixmap background;
 };
 
 #endif // MAPBUILDER_H

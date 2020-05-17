@@ -1,6 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QJsonDocument>
+
+#include "serialization.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -22,4 +28,22 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_actionLoad_map_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "Open the file");
+
+    QFile loadFile(fileName);
+
+    if(!loadFile.open(QIODevice::ReadOnly)) {
+        QMessageBox::warning(this, "Warning", "Cannot open file: " + loadFile.errorString());
+        return;
+    }
+
+    QByteArray loadData = loadFile.readAll();
+
+    QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
+
+    loadMap(loadDoc, scene);
 }

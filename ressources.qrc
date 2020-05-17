@@ -14,5 +14,8 @@
         <file>textures/dispenser_front_horizontal.png</file>
         <file>textures/bonus_box.png</file>
         <file>textures/bedrock.png</file>
+        <file>backgrounds/back2.jpg</file>
+        <file>backgrounds/back1.jpg</file>
+        <file>backgrounds/back3.jpg</file>
     </qresource>
 </RCC>

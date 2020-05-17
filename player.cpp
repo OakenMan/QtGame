@@ -51,7 +51,7 @@ void Player::addDirection(int newDirection) {
 }
 
 QRectF Player::boundingRect() const {
-    return QRectF(0, 0, 50, 100);
+    return QRectF(0, 0, 48, 72);
 }
 
 void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget) {

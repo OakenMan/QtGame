@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
+#include <QPainter>
 
 #include "blocks/groundbrick.h"
 #include "blocks/solidbrick.h"
@@ -21,6 +22,8 @@ MapBuilder::MapBuilder(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000
     Player *player = new Player();
     addItem(player);
     player->setPos(48, 672 - player->boundingRect().height());
+
+    background = QPixmap(":/images/backgrounds/back3.jpg");
 }
 
 void MapBuilder::setCurrentBlock(Blocks block)
@@ -59,6 +62,13 @@ void MapBuilder::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 
     QGraphicsScene::mouseMoveEvent(event);
+}
+
+void MapBuilder::drawBackground(QPainter *painter, const QRectF &rect)
+{
+    painter->drawPixmap(0, 0, 1280, 720, background);
+
+    Q_UNUSED(rect);
 }
 
 void MapBuilder::placeBlock(QPointF pos)

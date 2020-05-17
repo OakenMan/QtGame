@@ -34,7 +34,8 @@ SOURCES += \
     blocks/solidbrick.cpp \
     blocks/platformbrick.cpp \
     blocks/bonusbox.cpp \
-    blocks/groundbrick.cpp
+    blocks/groundbrick.cpp \
+    serialization.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -47,7 +48,8 @@ HEADERS += \
     blocks/solidbrick.h \
     blocks/platformbrick.h \
     blocks/bonusbox.h \
-    blocks/groundbrick.h
+    blocks/groundbrick.h \
+    serialization.h
 
 FORMS += \
         mainwindow.ui \
