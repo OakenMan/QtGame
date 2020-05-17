@@ -28,13 +28,30 @@ SOURCES += \
         mainwindow.cpp \
     scene.cpp \
     player.cpp \
-    rigidbody.cpp
+    rigidbody.cpp \
+    mapbuilderwindow.cpp \
+    mapbuilder.cpp \
+    blocks/solidbrick.cpp \
+    blocks/platformbrick.cpp \
+    blocks/bonusbox.cpp \
+    blocks/groundbrick.cpp
 
 HEADERS += \
         mainwindow.h \
     scene.h \
     player.h \
-    rigidbody.h
+    rigidbody.h \
+    mapbuilderwindow.h \
+    mapbuilder.h \
+    blocks.h \
+    blocks/solidbrick.h \
+    blocks/platformbrick.h \
+    blocks/bonusbox.h \
+    blocks/groundbrick.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    mapbuilderwindow.ui
+
+RESOURCES += \
+    ressources.qrc

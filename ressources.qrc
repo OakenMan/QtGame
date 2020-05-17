@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>textures/solid_brick.png</file>
+        <file>textures/platform_brick.png</file>
+        <file>textures/planks_jungle.png</file>
+        <file>textures/obsidian.png</file>
+        <file>textures/netherrack.png</file>
+        <file>textures/nether_brick.png</file>
+        <file>textures/lapis_block.png</file>
+        <file>textures/hardened_clay_stained_light_blue.png</file>
+        <file>textures/hardened_clay_stained_blue.png</file>
+        <file>textures/hardened_clay_stained_black.png</file>
+        <file>textures/ground_brick.png</file>
+        <file>textures/dispenser_front_horizontal.png</file>
+        <file>textures/bonus_box.png</file>
+        <file>textures/bedrock.png</file>
+    </qresource>
+</RCC>

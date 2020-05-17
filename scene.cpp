@@ -48,7 +48,6 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 80000, 720, pa
     // "Vue" de la scene ---> 8000 de long et 720 de haut
     setSceneRect(0, 0, 8000, 720);
 
-
     scroll->setValue(0);
 
     this->installEventFilter(this);

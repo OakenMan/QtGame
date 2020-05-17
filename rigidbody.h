@@ -1,5 +1,5 @@
-#ifndef BRICK_H
-#define BRICK_H
+#ifndef RIGIDBODY_H
+#define RIGIDBODY_H
 
 #include <QGraphicsItem>
 
@@ -10,6 +10,9 @@ public:
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget);
+
+protected:
+    QPixmap pixmap;
 };
 
-#endif // BRICK_H
+#endif // RIGIDBODY_H

@@ -10,7 +10,7 @@ RigidBody::RigidBody()
 
 QRectF RigidBody::boundingRect() const
 {
-    return QRectF(0, 0, 100, 100);
+    return QRectF(0, 0, 48, 48);
 }
 
 void RigidBody::paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget)
