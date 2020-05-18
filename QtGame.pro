@@ -31,10 +31,6 @@ SOURCES += \
     rigidbody.cpp \
     mapbuilderwindow.cpp \
     mapbuilder.cpp \
-    blocks/solidbrick.cpp \
-    blocks/platformbrick.cpp \
-    blocks/bonusbox.cpp \
-    blocks/groundbrick.cpp \
     serialization.cpp \
     tiles/tile.cpp \
     tiles/genericplatform.cpp \
@@ -57,7 +53,13 @@ SOURCES += \
     entities/coingold.cpp \
     tiles/signexit.cpp \
     tiles/signleft.cpp \
-    tiles/signright.cpp
+    tiles/signright.cpp \
+    tiles/bush.cpp \
+    tiles/snowhill.cpp \
+    tiles/rock.cpp \
+    tiles/purpleplant.cpp \
+    tiles/plant.cpp \
+    tiles/cactus.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -67,10 +69,6 @@ HEADERS += \
     mapbuilderwindow.h \
     mapbuilder.h \
     blocks.h \
-    blocks/solidbrick.h \
-    blocks/platformbrick.h \
-    blocks/bonusbox.h \
-    blocks/groundbrick.h \
     serialization.h \
     tiles/tile.h \
     tiles/genericplatform.h \
@@ -94,7 +92,13 @@ HEADERS += \
     entities/coingold.h \
     tiles/signexit.h \
     tiles/signleft.h \
-    tiles/signright.h
+    tiles/signright.h \
+    tiles/bush.h \
+    tiles/snowhill.h \
+    tiles/rock.h \
+    tiles/purpleplant.h \
+    tiles/plant.h \
+    tiles/cactus.h
 
 FORMS += \
         mainwindow.ui \

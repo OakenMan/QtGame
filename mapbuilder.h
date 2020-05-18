@@ -5,6 +5,7 @@
 #include <QScrollBar>
 
 #include "rbodytype.h"
+#include "rigidbody.h"
 
 class MapBuilder : public QGraphicsScene
 {
@@ -20,6 +21,7 @@ public:
     void placeGround();
 
     void setBackground(QPixmap bg);
+    QPixmap background();
 
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -34,5 +36,7 @@ private:
 
     QPixmap background;
 };
+
+RigidBody *createRigidBody(RBodyType type);
 
 #endif // MAPBUILDER_H

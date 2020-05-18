@@ -20,6 +20,13 @@
 #include "tiles/signexit.h"
 #include "tiles/signleft.h"
 #include "tiles/signright.h"
+#include "tiles/bush.h"
+#include "tiles/cactus.h"
+#include "tiles/rock.h"
+#include "tiles/plant.h"
+#include "tiles/snowhill.h"
+#include "tiles/purpleplant.h"
+
 #include "entities/coinbronze.h"
 #include "entities/coinsilver.h"
 #include "entities/coingold.h"
@@ -91,35 +98,12 @@ void MapBuilder::drawBackground(QPainter *painter, const QRectF &rect)
 void MapBuilder::placeBlock(QPointF pos)
 {
     if(!(items(pos).isEmpty())) {
-        return;
+//        return;
     }
 
     QPointF newPos(((int)pos.x() / 48) * 48, ((int)pos.y() / 48) * 48);
 
-    RigidBody *rb;
-
-    switch(currentRBody) {
-    case pGrassPlatform:    rb = new GrassPlatform();   break;
-    case pDirtPlatform:     rb = new DirtPlatform();    break;
-    case pSandPlatform:     rb = new SandPlatform();    break;
-    case pSnowPlatform:     rb = new SnowPlatform();    break;
-    case pStonePlatform:    rb = new StonePlatform();   break;
-    case pCastlePlatform:   rb = new CastlePlatform();  break;
-    case tWater:            rb = new Water();           break;
-    case tLava:             rb = new Lava();            break;
-    case tBox:              rb = new Box();             break;
-    case tBoxAlt:           rb = new BoxAlt();          break;
-    case tBoxEmpty:         rb = new BoxEmpty();        break;
-    case tBoxCoin:          rb = new BoxCoin();         break;
-    case tBoxItem:          rb = new BoxItem();         break;
-    case iCoinBronze:       rb = new CoinBronze();      break;
-    case iCoinSilver:       rb = new CoinSilver();      break;
-    case iCoinGold:         rb = new CoinGold();        break;
-    case dSignExit:         rb = new SignExit();        break;
-    case dSignLeft:         rb = new SignLeft();        break;
-    case dSignRight:        rb = new SignRight();       break;
-    default:                                            break;
-    }
+    RigidBody *rb = createRigidBody(currentRBody);
 
     addItem(rb);
 
@@ -148,4 +132,9 @@ void MapBuilder::placeGround()
 void MapBuilder::setBackground(QPixmap bg)
 {
     background = bg;
+}
+
+QPixmap MapBuilder::background()
+{
+    return background();
 }

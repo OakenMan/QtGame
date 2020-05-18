@@ -6,10 +6,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 
-#include "blocks/groundbrick.h"
-#include "blocks/solidbrick.h"
-#include "blocks/platformbrick.h"
-#include "blocks/bonusbox.h"
+#include "rigidbody.h"
+#include "mapbuilder.h"
 
 /**
  * Lis un document Json et rajoute les différents éléments à la scène actuelle
@@ -23,19 +21,9 @@ void loadMap(const QJsonDocument loadData, QGraphicsScene *scene)
         QJsonObject item = array[i].toObject();
         qreal x = item["x"].toDouble();
         qreal y = item["y"].toDouble();
-        int type = item["type"].toInt();
+        RBodyType type = static_cast<RBodyType>(item["type"].toInt());
 
-        QGraphicsItem *block;
-        const int usertype = QGraphicsItem::UserType;
-
-        // [!] Pour chaque ajout d'élément, les rajouter ici :
-        switch(type) {
-        case usertype+2: block = new GroundBrick();     break;
-        case usertype+3: block = new SolidBrick();      break;
-        case usertype+4: block = new PlatformBrick();   break;
-        case usertype+5: block = new BonusBox();        break;
-        default: break;
-        }
+        RigidBody * block = createRigidBody(type);
 
         scene->addItem(block);
         block->setPos(block->mapFromScene(QPointF(x, y)));
@@ -56,7 +44,7 @@ void loadMap(const QJsonDocument loadData, QGraphicsScene *scene)
  *         ]
  *  }
  */
-QJsonDocument saveMap(QGraphicsScene *scene)
+QJsonDocument saveMap(MapBuilder *scene)
 {
     QJsonObject mainObject;
     QJsonArray array;
@@ -66,17 +54,18 @@ QJsonDocument saveMap(QGraphicsScene *scene)
         for(int j=24; j<scene->sceneRect().height(); j+=48) {
             QList<QGraphicsItem*> list = scene->items(QPointF((qreal)i, (qreal)j));
             if(!list.isEmpty()) {
-                QGraphicsItem *item = list.at(0);
+                RigidBody *item = (RigidBody*)list.at(0);
                 QJsonObject block;
                 block["x"] = i-24;
                 block["y"] = j-24;
-                block["type"] = item->type();
+                block["type"] = item->getType();
                 array.append(block);
             }
         }
     }
 
     mainObject["items"] = array;
+//    mainObject["background"] = scene->background();
 
     QJsonDocument saveData(mainObject);
 

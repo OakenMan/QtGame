@@ -17,6 +17,7 @@ public:
 
     // Nouvelles méthodes
     void onCollide();
+    RBodyType getType();
 
     // Constantes
     const int DEFAULT_TILE_SIZE = 48;
@@ -25,7 +26,8 @@ protected:
     RBodyType bodyType;
     QPixmap pixmap; // Texture affichées à l'écran
     bool isSolid;
-
 };
+
+RigidBody * createRigidBody(RBodyType type);
 
 #endif // RIGIDBODY_H
