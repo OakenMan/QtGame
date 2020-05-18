@@ -35,7 +35,29 @@ SOURCES += \
     blocks/platformbrick.cpp \
     blocks/bonusbox.cpp \
     blocks/groundbrick.cpp \
-    serialization.cpp
+    serialization.cpp \
+    tiles/tile.cpp \
+    tiles/genericplatform.cpp \
+    tiles/grassplatform.cpp \
+    tiles/dirtplatform.cpp \
+    tiles/stoneplatform.cpp \
+    tiles/sandplatform.cpp \
+    tiles/snowplatform.cpp \
+    tiles/castleplatform.cpp \
+    tiles/water.cpp \
+    tiles/lava.cpp \
+    tiles/boxcoin.cpp \
+    tiles/boxitem.cpp \
+    tiles/box.cpp \
+    tiles/boxalt.cpp \
+    tiles/boxempty.cpp \
+    entities/entity.cpp \
+    entities/coinbronze.cpp \
+    entities/coinsilver.cpp \
+    entities/coingold.cpp \
+    tiles/signexit.cpp \
+    tiles/signleft.cpp \
+    tiles/signright.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -49,7 +71,30 @@ HEADERS += \
     blocks/platformbrick.h \
     blocks/bonusbox.h \
     blocks/groundbrick.h \
-    serialization.h
+    serialization.h \
+    tiles/tile.h \
+    tiles/genericplatform.h \
+    tiles/grassplatform.h \
+    rbodytype.h \
+    tiles/dirtplatform.h \
+    tiles/stoneplatform.h \
+    tiles/sandplatform.h \
+    tiles/snowplatform.h \
+    tiles/castleplatform.h \
+    tiles/water.h \
+    tiles/lava.h \
+    tiles/boxcoin.h \
+    tiles/boxitem.h \
+    tiles/box.h \
+    tiles/boxalt.h \
+    tiles/boxempty.h \
+    entities/entity.h \
+    entities/coinbronze.h \
+    entities/coinsilver.h \
+    entities/coingold.h \
+    tiles/signexit.h \
+    tiles/signleft.h \
+    tiles/signright.h
 
 FORMS += \
         mainwindow.ui \

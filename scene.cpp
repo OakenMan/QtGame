@@ -174,7 +174,7 @@ void Scene::movePlayer() {
     if(direction > 0) {
 
         // On bloque tout mouvement au delà de 7950 (frontière droite)
-        if(player->pos().x() > 7950) {
+        if(player->pos().x() >= 8000) {
             return;
         }
 
@@ -198,7 +198,7 @@ void Scene::movePlayer() {
     }
     // Tout pareil mais à gauche
     if(direction < 0) {
-        if(player->pos().x() < 50) {
+        if(player->pos().x() <= 0) {
             return;
         }
         player->moveBy(dx, 0);

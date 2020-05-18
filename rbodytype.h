@@ -1,0 +1,40 @@
+#ifndef RBODYTYPE_H
+#define RBODYTYPE_H
+
+enum RBodyType {
+    pGrassPlatform,
+    pSandPlatform,
+    pDirtPlatform,
+    pSnowPlatform,
+    pStonePlatform,
+    pCastlePlatform,
+    tWater,
+    tLava,
+    tBoxCoin,
+    tBoxItem,
+    tBoxEmpty,
+    tBox,
+    tBoxAlt,
+    tSpikes,
+    tSpring,
+    tLever,
+    iCoinBronze,
+    iCoinSilver,
+    iCoinGold,
+    eBlocker,
+    eFish,
+    eSlime,
+    ePoker,
+    eSnail,
+    dSignExit,
+    dSignLeft,
+    dSignRight,
+    dBush,
+    dRock,
+    dSnowhill,
+    dPlantPurple,
+    dPlant,
+    dCactus,
+};
+
+#endif // RBODYTYPE_H

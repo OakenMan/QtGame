@@ -1,25 +1,20 @@
 #include "rigidbody.h"
 
-#include <QBrush>
 #include <QPainter>
 
 RigidBody::RigidBody()
 {
-
+    isSolid = true;
 }
 
 QRectF RigidBody::boundingRect() const
 {
-    return QRectF(0, 0, 48, 48);
+    return QRectF(0, 0, DEFAULT_TILE_SIZE, DEFAULT_TILE_SIZE);
 }
 
 void RigidBody::paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget)
 {
-    QRectF rec = boundingRect();
-    QBrush brush(Qt::gray);
-
-    painter->fillRect(rec, brush);
-    painter->drawRect(rec);
+    painter->drawPixmap(boundingRect().toRect(), pixmap);
 
     Q_UNUSED(widget);
     Q_UNUSED(options);

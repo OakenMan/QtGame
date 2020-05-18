@@ -3,17 +3,29 @@
 
 #include <QGraphicsItem>
 
+#include "rbodytype.h"
+
 class RigidBody : public QGraphicsItem
 {
 public:
     RigidBody();
 
+    // Overrides de QGraphicsItem
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget);
     int type() const override { return UserType + 1; }
 
+    // Nouvelles méthodes
+    void onCollide();
+
+    // Constantes
+    const int DEFAULT_TILE_SIZE = 48;
+
 protected:
-    QPixmap pixmap;
+    RBodyType bodyType;
+    QPixmap pixmap; // Texture affichées à l'écran
+    bool isSolid;
+
 };
 
 #endif // RIGIDBODY_H

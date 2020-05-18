@@ -4,7 +4,7 @@
 #include <QGraphicsScene>
 #include <QScrollBar>
 
-#include "blocks.h"
+#include "rbodytype.h"
 
 class MapBuilder : public QGraphicsScene
 {
@@ -12,10 +12,14 @@ class MapBuilder : public QGraphicsScene
 
 public:
     explicit MapBuilder(QScrollBar *s, QObject *parent=nullptr);
-    void setCurrentBlock(Blocks block);
+
+    void setCurrentBlock(RBodyType block);
+
     void placeBlock(QPointF pos);
     void deleteBlock(QPointF pos);
     void placeGround();
+
+    void setBackground(QPixmap bg);
 
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -25,7 +29,7 @@ protected:
 
 private:
     QScrollBar *scroll;
-    Blocks currentBlock;
+    RBodyType currentRBody;
     int action;
 
     QPixmap background;

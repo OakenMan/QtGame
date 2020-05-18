@@ -4,10 +4,25 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 
-#include "blocks/groundbrick.h"
-#include "blocks/solidbrick.h"
-#include "blocks/platformbrick.h"
-#include "blocks/bonusbox.h"
+#include "tiles/grassplatform.h"
+#include "tiles/dirtplatform.h"
+#include "tiles/sandplatform.h"
+#include "tiles/snowplatform.h"
+#include "tiles/stoneplatform.h"
+#include "tiles/castleplatform.h"
+#include "tiles/water.h"
+#include "tiles/lava.h"
+#include "tiles/box.h"
+#include "tiles/boxalt.h"
+#include "tiles/boxempty.h"
+#include "tiles/boxcoin.h"
+#include "tiles/boxitem.h"
+#include "tiles/signexit.h"
+#include "tiles/signleft.h"
+#include "tiles/signright.h"
+#include "entities/coinbronze.h"
+#include "entities/coinsilver.h"
+#include "entities/coingold.h"
 
 #include "player.h"
 
@@ -17,18 +32,16 @@ MapBuilder::MapBuilder(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000
 
     setSceneRect(0, 0, 8000, 720);
 
-    setCurrentBlock(bGroundBrick);
+    setCurrentBlock(pGrassPlatform);
 
     Player *player = new Player();
     addItem(player);
     player->setPos(48, 672 - player->boundingRect().height());
-
-    background = QPixmap(":/images/backgrounds/back3.jpg");
 }
 
-void MapBuilder::setCurrentBlock(Blocks block)
+void MapBuilder::setCurrentBlock(RBodyType block)
 {
-    currentBlock = block;
+    currentRBody = block;
 }
 
 void MapBuilder::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -66,7 +79,11 @@ void MapBuilder::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void MapBuilder::drawBackground(QPainter *painter, const QRectF &rect)
 {
-    painter->drawPixmap(0, 0, 1280, 720, background);
+    for(int i=0; i<sceneRect().width(); i+=256) {
+        for(int j=0; j<sceneRect().height(); j+=256) {
+            painter->drawPixmap(i, j, 256, 256, background);
+        }
+    }
 
     Q_UNUSED(rect);
 }
@@ -79,19 +96,36 @@ void MapBuilder::placeBlock(QPointF pos)
 
     QPointF newPos(((int)pos.x() / 48) * 48, ((int)pos.y() / 48) * 48);
 
-    QGraphicsItem *block;
+    RigidBody *rb;
 
-    switch(currentBlock) {
-    case bGroundBrick:   block = new GroundBrick();      break;
-    case bSolidBrick:    block = new SolidBrick();       break;
-    case bPlatformBrick: block = new PlatformBrick();    break;
-    case bBonusBox:      block = new BonusBox();         break;
-    default:            break;
+    switch(currentRBody) {
+    case pGrassPlatform:    rb = new GrassPlatform();   break;
+    case pDirtPlatform:     rb = new DirtPlatform();    break;
+    case pSandPlatform:     rb = new SandPlatform();    break;
+    case pSnowPlatform:     rb = new SnowPlatform();    break;
+    case pStonePlatform:    rb = new StonePlatform();   break;
+    case pCastlePlatform:   rb = new CastlePlatform();  break;
+    case tWater:            rb = new Water();           break;
+    case tLava:             rb = new Lava();            break;
+    case tBox:              rb = new Box();             break;
+    case tBoxAlt:           rb = new BoxAlt();          break;
+    case tBoxEmpty:         rb = new BoxEmpty();        break;
+    case tBoxCoin:          rb = new BoxCoin();         break;
+    case tBoxItem:          rb = new BoxItem();         break;
+    case iCoinBronze:       rb = new CoinBronze();      break;
+    case iCoinSilver:       rb = new CoinSilver();      break;
+    case iCoinGold:         rb = new CoinGold();        break;
+    case dSignExit:         rb = new SignExit();        break;
+    case dSignLeft:         rb = new SignLeft();        break;
+    case dSignRight:        rb = new SignRight();       break;
+    default:                                            break;
     }
 
-    addItem(block);
+    addItem(rb);
 
-    block->setPos(block->mapFromScene(newPos));
+    rb->setPos(rb->mapFromScene(newPos));
+
+    update(QRectF(newPos.x()-144, newPos.y()-144, 288, 288));
 }
 
 void MapBuilder::deleteBlock(QPointF pos)
@@ -100,12 +134,18 @@ void MapBuilder::deleteBlock(QPointF pos)
     for(QGraphicsItem * item : list) {
         delete item;
     }
+    update(QRectF(pos.x()-144, pos.y()-144, 288, 288));
 }
 
 void MapBuilder::placeGround()
 {
-    setCurrentBlock(bGroundBrick);
+    setCurrentBlock(pGrassPlatform);
     for(int i=0; i<8000/66; i++) {
         placeBlock(QPointF(i*48, 672));
     }
+}
+
+void MapBuilder::setBackground(QPixmap bg)
+{
+    background = bg;
 }
