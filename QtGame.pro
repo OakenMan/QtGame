@@ -25,11 +25,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    Physics/collision.cpp \
+    Physics/kinematicbody.cpp \
+    Physics/physicbody.cpp \
+    Physics/physicsengine.cpp \
+    Physics/rigidbody.cpp \
+    Physics/staticbody.cpp \
         main.cpp \
         mainwindow.cpp \
     scene.cpp \
     player.cpp \
-    rigidbody.cpp \
     mapbuilderwindow.cpp \
     mapbuilder.cpp \
     serialization.cpp \
@@ -65,6 +70,12 @@ SOURCES += \
     soundmanager.cpp
 
 HEADERS += \
+    Physics/collision.h \
+    Physics/kinematicbody.h \
+    Physics/physicbody.h \
+    Physics/physicsengine.h \
+    Physics/rigidbody.h \
+    Physics/staticbody.h \
         mainwindow.h \
     scene.h \
     player.h \

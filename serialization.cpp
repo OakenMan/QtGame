@@ -6,7 +6,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 
-#include "rigidbody.h"
+#include "Physics/rigidbody.h"
 #include "mapbuilder.h"
 
 /**
