@@ -3,7 +3,8 @@
 #include <QDebug>
 #include <QPointF>
 
-#include "rigidbody.h"
+#include "Physics/rigidbody.h"
+#include "Physics/physicsengine.h"
 #include "rbodytype.h"
 
 #include "entities/coingold.h"
@@ -61,6 +62,11 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, par
     //    emit playSound(mLevel1);
 
     this->installEventFilter(this);
+
+    //Moteur Physique
+    PhysicsEngine* engine = new PhysicsEngine();
+    connect(engine, &QThread::finished, engine, &QObject::deleteLater);
+    engine->start();
 }
 
 qreal Scene::getJumpFactor() const
