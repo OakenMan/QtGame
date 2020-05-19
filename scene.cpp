@@ -52,9 +52,10 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, par
 
     scroll->setValue(0);
 
+    // Gestion du son dans la scène
     soundManager = new SoundManager();
-    connect(this, &Scene::playSound, soundManager, &SoundManager::playSoundEffect);
-    emit playSound(sPowerup);
+    //    connect(this, &Scene::playSound, soundManager, &SoundManager::playSoundEffect);
+    //    emit playSound(mLevel1);
 
     this->installEventFilter(this);
 }
@@ -118,8 +119,10 @@ bool Scene::eventFilter(QObject *watched, QEvent *event)
                 return false;
             }
             else {
-                if(jumpAnimation->state() == QAbstractAnimation::Stopped)
+                if(jumpAnimation->state() == QAbstractAnimation::Stopped) {
+                    soundManager->playSoundEffect(sJump);
                     jumpAnimation->start();
+                }
             }
             break;
         }
@@ -332,9 +335,9 @@ QGraphicsItem * Scene::collidingPlatforms() {
         if(RigidBody *rigidbody = qgraphicsitem_cast<RigidBody *>(item)) {
             return rigidbody;
         }
-//        if(AutreObjet *other = qgraphicsitem_cast<AutreObjet *>(item)) {
-//            return other;
-//        }
+        //        if(AutreObjet *other = qgraphicsitem_cast<AutreObjet *>(item)) {
+        //            return other;
+        //        }
     }
     return 0;
 }

@@ -1,12 +1,19 @@
 #include "player.h"
 
 #include <QRectF>
-#include <QBrush>
-#include <QPainter>
+#include <QDebug>
 
 Player::Player()
 {
     setFlags(QGraphicsItem::ItemClipsToShape);
+
+    standPixmap = QPixmap(":/player/ressources/Player/p1_stand.png");
+    walkPixmap = QPixmap(":/player/ressources/Player/p1_walk/PNG/p1_walk03.png");
+    jumpPixmap = QPixmap(":/player/ressources/Player/p1_jump.png");
+    hurtPixmap = QPixmap(":/player/ressources/Player/p1_hurt.png");
+
+    pixmap = standPixmap;
+
     direction = 0;
     state = Standing;
 }
@@ -16,12 +23,29 @@ Player::~Player()
 
 }
 
+QRectF Player::boundingRect() const {
+    return QRectF(0, 0, 48, 72);
+}
+
+//void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget) {
+//    QRectF rec = boundingRect();
+//    QBrush brush(Qt::blue);
+
+//    painter->fillRect(rec, brush);
+//    painter->drawRect(rec);
+
+//    Q_UNUSED(widget);
+//    Q_UNUSED(options);
+//}
+
 void Player::stand() {
     state = Standing;
+    pixmap = standPixmap;
 }
 
 void Player::jump() {
     state = Jumping;
+    pixmap = jumpPixmap;
 }
 
 void Player::walk() {
@@ -29,10 +53,12 @@ void Player::walk() {
         return;
     }
     state = Walking;
+    pixmap = walkPixmap;
 }
 
 void Player::fall() {
     state = Falling;
+    pixmap = hurtPixmap;
 }
 
 bool Player::isFalling() {
@@ -47,22 +73,18 @@ void Player::addDirection(int newDirection) {
     if(direction == newDirection) {
         return;
     }
+
     direction += newDirection;
-}
 
-QRectF Player::boundingRect() const {
-    return QRectF(0, 0, 48, 72);
-}
+    setTransformOriginPoint(boundingRect().center());
 
-void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget) {
-    QRectF rec = boundingRect();
-    QBrush brush(Qt::blue);
-
-    painter->fillRect(rec, brush);
-    painter->drawRect(rec);
-
-    Q_UNUSED(widget);
-    Q_UNUSED(options);
+    if(direction == -1) {
+        qDebug() << "direction = -1, on retourne";
+        setTransform(QTransform(-1, 0, 0, 1, boundingRect().width(), 0));
+    }
+    else if(direction == 1){
+        setTransform(QTransform());
+    }
 }
 
 bool Player::isTouchingFoot(QGraphicsItem *item){

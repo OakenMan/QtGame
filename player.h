@@ -1,12 +1,12 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <QGraphicsItem>
+#include "rigidbody.h"
 
 /**
  * @brief Le joueur
  */
-class Player : public QGraphicsItem
+class Player : public RigidBody
 {
 public:
     Player();
@@ -20,7 +20,7 @@ public:
     bool isTouchingPlatform(QGraphicsItem *item);
 
     QRectF boundingRect() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget);
+//    void paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget);
 
     void stand();
     void jump();
@@ -38,6 +38,11 @@ private:
     };
     int direction;
     State state;
+
+    QPixmap walkPixmap;
+    QPixmap standPixmap;
+    QPixmap jumpPixmap;
+    QPixmap hurtPixmap;
 
 };
 

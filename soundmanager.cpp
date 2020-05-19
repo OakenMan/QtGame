@@ -2,13 +2,15 @@
 
 SoundManager::SoundManager(QWidget *parent)
 {
+    Q_UNUSED(parent);
+
     jump = new QSoundEffect();
     jump->setSource(QUrl("qrc:/sounds/ressources/Sounds/jump.wav"));
     jump->setLoopCount(0);
     jump->setVolume(.25f);
 
     coin = new QSoundEffect();
-    coin->setSource(QUrl("qrc:/sounds/ressources/Sounds/coin.wav"));
+    coin->setSource(QUrl("qrc:/sounds/ressources/Sounds/coin2.wav"));
     coin->setLoopCount(0);
     coin->setVolume(.25f);
 
@@ -31,12 +33,9 @@ SoundManager::~SoundManager()
 
 }
 
-//void SoundManager::playSoundEffect(QString effect) {
-
-//}
-
 void SoundManager::playSoundEffect(SoundEffect effect) {
     switch(effect) {
+    case mLevel1:   music->play();      break;
     case sJump:     jump->play();       break;
     case sCoin:     coin->play();       break;
     case sGameover: gameover->play();   break;
