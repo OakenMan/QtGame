@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>508</width>
-    <height>547</height>
+    <width>605</width>
+    <height>282</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QWidget" name="gridLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>30</y>
+     <x>68</x>
+     <y>40</y>
      <width>451</width>
      <height>194</height>
     </rect>
@@ -556,8 +556,8 @@
   <widget class="QWidget" name="gridLayoutWidget_2">
    <property name="geometry">
     <rect>
-     <x>25</x>
-     <y>17</y>
+     <x>63</x>
+     <y>27</y>
      <width>461</width>
      <height>221</height>
     </rect>
@@ -799,8 +799,8 @@
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
+     <x>48</x>
+     <y>20</y>
      <width>30</width>
      <height>30</height>
     </rect>
@@ -837,8 +837,8 @@
   <widget class="QPushButton" name="mapEditorButton">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>94</y>
+     <x>378</x>
+     <y>104</y>
      <width>64</width>
      <height>64</height>
     </rect>
@@ -875,8 +875,8 @@
   <widget class="QPushButton" name="gameButton">
    <property name="geometry">
     <rect>
-     <x>105</x>
-     <y>94</y>
+     <x>143</x>
+     <y>104</y>
      <width>64</width>
      <height>64</height>
     </rect>
@@ -913,8 +913,8 @@
   <widget class="QLabel" name="labelGame">
    <property name="geometry">
     <rect>
-     <x>105</x>
-     <y>150</y>
+     <x>143</x>
+     <y>160</y>
      <width>67</width>
      <height>41</height>
     </rect>
@@ -935,8 +935,8 @@
   <widget class="QLabel" name="labelMapEditor">
    <property name="geometry">
     <rect>
-     <x>325</x>
-     <y>150</y>
+     <x>363</x>
+     <y>160</y>
      <width>91</width>
      <height>41</height>
     </rect>
@@ -952,6 +952,37 @@
    </property>
    <property name="wordWrap">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_32">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>100</y>
+     <width>64</width>
+     <height>64</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>64</width>
+     <height>64</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>64</width>
+     <height>64</height>
+    </size>
+   </property>
+   <property name="lineWidth">
+    <number>0</number>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="ressources.qrc">:/map/ressources/Map/mapTile_136.png</pixmap>
    </property>
   </widget>
  </widget>

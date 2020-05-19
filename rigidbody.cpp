@@ -32,6 +32,8 @@
 RigidBody::RigidBody()
 {
     isSolid = true;
+
+    pixmap = QPixmap(":/tiles/ressources/Tiles/box.png");
 }
 
 QRectF RigidBody::boundingRect() const

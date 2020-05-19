@@ -42,15 +42,6 @@ QRectF Player::boundingRect() const {
     return QRectF(0, 0, DEFAULT_TILE_SIZE, 1.5*DEFAULT_TILE_SIZE);
 }
 
-void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget)
-{
-    qDebug() << pixmap;
-    painter->drawPixmap(boundingRect().toRect(), pixmap);
-
-    Q_UNUSED(widget);
-    Q_UNUSED(options);
-}
-
 void Player::stand() {
     state = Standing;
     pixmap = standPixmap;

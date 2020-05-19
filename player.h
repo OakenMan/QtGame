@@ -20,7 +20,6 @@ public:
     bool isTouchingPlatform(QGraphicsItem *item);
 
     QRectF boundingRect() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget);
 
     void stand();
     void jump();

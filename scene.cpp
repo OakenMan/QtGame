@@ -82,11 +82,12 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button() == Qt::RightButton) {
         QPointF pos = event->scenePos();
+        QPointF newPos(((int)pos.x() / 48) * 48, ((int)pos.y() / 48) * 48);
 
         RigidBody *rb = new RigidBody();
         addItem(rb);
 
-        rb->setPos(rb->mapFromScene(pos));
+        rb->setPos(rb->mapFromScene(newPos));
         rb->setFlags(QGraphicsItem::ItemIsMovable);
     }
     QGraphicsScene::mousePressEvent(event);
