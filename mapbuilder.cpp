@@ -88,7 +88,7 @@ void MapBuilder::drawBackground(QPainter *painter, const QRectF &rect)
 {
     for(int i=0; i<sceneRect().width(); i+=256) {
         for(int j=0; j<sceneRect().height(); j+=256) {
-            painter->drawPixmap(i, j, 256, 256, background);
+            painter->drawPixmap(i, j, 256, 256, QPixmap(background));
         }
     }
 
@@ -129,12 +129,12 @@ void MapBuilder::placeGround()
     }
 }
 
-void MapBuilder::setBackground(QPixmap bg)
+void MapBuilder::setBackground(QString bg)
 {
     background = bg;
 }
 
-QPixmap MapBuilder::background()
+QString MapBuilder::getBackground()
 {
-    return background();
+    return background;
 }

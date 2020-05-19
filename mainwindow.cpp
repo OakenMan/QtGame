@@ -1,9 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QDesktopWidget>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QJsonDocument>
+#include <QDebug>
 
 #include "serialization.h"
 
@@ -14,6 +16,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setCentralWidget(ui->graphicsView);
 
+    // On place la fenêtre au centre de l'écran
+    move(QApplication::desktop()->screen()->rect().center() - rect().center());
+
     // Création de la scene principale
     scene = new Scene(ui->graphicsView->horizontalScrollBar(), this);
     ui->graphicsView->setScene(scene);
@@ -22,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // On fait disparaitre les scrollbars
 //    ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 //    ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    qDebug() << "open main window";
 
 }
 

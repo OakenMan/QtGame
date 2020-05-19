@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -59,7 +60,9 @@ SOURCES += \
     tiles/rock.cpp \
     tiles/purpleplant.cpp \
     tiles/plant.cpp \
-    tiles/cactus.cpp
+    tiles/cactus.cpp \
+    launcher.cpp \
+    soundmanager.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -98,11 +101,15 @@ HEADERS += \
     tiles/rock.h \
     tiles/purpleplant.h \
     tiles/plant.h \
-    tiles/cactus.h
+    tiles/cactus.h \
+    launcher.h \
+    soundmanager.h \
+    soundeffect.h
 
 FORMS += \
         mainwindow.ui \
-    mapbuilderwindow.ui
+    mapbuilderwindow.ui \
+    launcher.ui
 
 RESOURCES += \
     ressources.qrc

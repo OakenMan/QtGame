@@ -52,6 +52,10 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, par
 
     scroll->setValue(0);
 
+    soundManager = new SoundManager();
+    connect(this, &Scene::playSound, soundManager, &SoundManager::playSoundEffect);
+    emit playSound(sPowerup);
+
     this->installEventFilter(this);
 }
 

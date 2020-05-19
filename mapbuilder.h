@@ -20,8 +20,8 @@ public:
     void deleteBlock(QPointF pos);
     void placeGround();
 
-    void setBackground(QPixmap bg);
-    QPixmap background();
+    void setBackground(QString bg);
+    QString getBackground();
 
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -34,7 +34,7 @@ private:
     RBodyType currentRBody;
     int action;
 
-    QPixmap background;
+    QString background;
 };
 
 RigidBody *createRigidBody(RBodyType type);

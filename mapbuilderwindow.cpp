@@ -1,6 +1,7 @@
 #include "mapbuilderwindow.h"
 #include "ui_mapbuilderwindow.h"
 
+#include <QDesktopWidget>
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -17,6 +18,9 @@ MapBuilderWindow::MapBuilderWindow(QWidget *parent) :
     ui(new Ui::MapBuilderWindow)
 {
     ui->setupUi(this);
+
+    // On place la fenêtre au centre de l'écran
+    move(QApplication::desktop()->screen()->rect().center() - rect().center());
 
     scene = new MapBuilder(ui->graphicsView->horizontalScrollBar(), this);
     ui->graphicsView->setScene(scene);
@@ -90,13 +94,14 @@ void MapBuilderWindow::on_actionNouveau_niveau_triggered()
 
 void MapBuilderWindow::on_bgSkyBtn_clicked()
 {
-    scene->setBackground(QPixmap(":/tiles/ressources/bg.png"));
+    scene->setBackground(":/tiles/ressources/bg.png");
     scene->update(scene->sceneRect());
 }
 
 void MapBuilderWindow::on_bgCastleBtn_clicked()
 {
-    scene->setBackground(QPixmap(":/tiles/ressources/bg_castle.png"));
+    scene->setBackground(":/tiles/ressources/bg_castle.png");
+    scene->update(scene->sceneRect());
 }
 
 void MapBuilderWindow::on_pGrassPlatformBtn_clicked()

@@ -12,6 +12,7 @@
 #include <QScrollBar>
 
 #include "player.h"
+#include "soundmanager.h"
 
 /**
  * @brief Scene principale
@@ -45,6 +46,7 @@ private slots:
 
 signals:
     void jumpFactorChanged(qreal);
+    void playSound(SoundEffect);
 
 private:
     Player * player;
@@ -61,6 +63,8 @@ private:
     qreal groundLevel;
 
     QScrollBar *scroll;
+
+    SoundManager *soundManager;
 
 };
 

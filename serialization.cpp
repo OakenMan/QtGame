@@ -16,6 +16,7 @@ void loadMap(const QJsonDocument loadData, QGraphicsScene *scene)
 {
     QJsonObject mainObject = loadData.object();
     QJsonArray array = mainObject["items"].toArray();
+    QString background = mainObject["background"].toString();
 
     for(int i=0; i<array.size(); i++) {
         QJsonObject item = array[i].toObject();
@@ -27,6 +28,8 @@ void loadMap(const QJsonDocument loadData, QGraphicsScene *scene)
 
         scene->addItem(block);
         block->setPos(block->mapFromScene(QPointF(x, y)));
+
+        scene->setBackgroundBrush(QBrush(QPixmap(background)));
     }
 }
 
@@ -65,7 +68,7 @@ QJsonDocument saveMap(MapBuilder *scene)
     }
 
     mainObject["items"] = array;
-//    mainObject["background"] = scene->background();
+    mainObject["background"] = scene->getBackground();
 
     QJsonDocument saveData(mainObject);
 
