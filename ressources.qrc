@@ -232,6 +232,16 @@
         <file>ressources/Player/p1_hurt.png</file>
         <file>ressources/Player/p1_front.png</file>
         <file>ressources/Player/p1_duck.png</file>
+        <file>ressources/Player/p1_walk/PNG/p1_walk11.png</file>
+        <file>ressources/Player/p1_walk/PNG/p1_walk10.png</file>
+        <file>ressources/Player/p1_walk/PNG/p1_walk09.png</file>
+        <file>ressources/Player/p1_walk/PNG/p1_walk08.png</file>
+        <file>ressources/Player/p1_walk/PNG/p1_walk07.png</file>
+        <file>ressources/Player/p1_walk/PNG/p1_walk06.png</file>
+        <file>ressources/Player/p1_walk/PNG/p1_walk05.png</file>
+        <file>ressources/Player/p1_walk/PNG/p1_walk04.png</file>
+        <file>ressources/Player/p1_walk/PNG/p1_walk02.png</file>
+        <file>ressources/Player/p1_walk/PNG/p1_walk01.png</file>
         <file>ressources/Player/p1_walk/PNG/p1_walk03.png</file>
     </qresource>
     <qresource prefix="/items">

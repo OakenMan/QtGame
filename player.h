@@ -20,7 +20,7 @@ public:
     bool isTouchingPlatform(QGraphicsItem *item);
 
     QRectF boundingRect() const;
-//    void paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget);
 
     void stand();
     void jump();
@@ -28,6 +28,8 @@ public:
     void fall();
 
     bool isFalling();
+
+    void nextFrame();
 
 private:
     enum State {
@@ -43,6 +45,10 @@ private:
     QPixmap standPixmap;
     QPixmap jumpPixmap;
     QPixmap hurtPixmap;
+
+    QPixmap walk1, walk2, walk3, walk4, walk5, walk6, walk7, walk8, walk9, walk10, walk11;
+
+    int walkFrame;
 
 };
 

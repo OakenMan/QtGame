@@ -122,6 +122,7 @@ bool Scene::eventFilter(QObject *watched, QEvent *event)
                 if(jumpAnimation->state() == QAbstractAnimation::Stopped) {
                     soundManager->playSoundEffect(sJump);
                     jumpAnimation->start();
+                    player->jump();
                 }
             }
             break;
@@ -176,6 +177,8 @@ void Scene::movePlayer() {
     }
 
     const int dx = direction * velocity;
+
+    player->nextFrame();
 
     // Si il va à droite
     if(direction > 0) {
