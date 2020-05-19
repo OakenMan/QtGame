@@ -4,7 +4,7 @@ Bush::Bush():Tile()
 {
     bodyType = dBush;
 
-    isSolid = false;
+    solid = false;
 
     pixmap = QPixmap(":/items/ressources/Items/bush.png");
 }

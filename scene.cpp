@@ -4,6 +4,9 @@
 #include <QPointF>
 
 #include "rigidbody.h"
+#include "rbodytype.h"
+
+#include "entities/coingold.h"
 
 Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, parent)
 {
@@ -23,7 +26,7 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, par
     jumpAnimation->setEasingCurve(QEasingCurve::OutInQuad);
 
     connect(this, &Scene::jumpFactorChanged, this, &Scene::jumpPlayer);
-    connect(jumpAnimation, &QPropertyAnimation::stateChanged, this, &Scene::jumpStatusChanged);
+    //    connect(jumpAnimation, &QPropertyAnimation::stateChanged, this, &Scene::jumpStatusChanged);
 
     // Timer pour le mouvement
     moveTimer = new QTimer(this);
@@ -159,6 +162,8 @@ void Scene::movePlayer() {
     //        return;
     //    }
 
+    checkCollidingCoins();
+
     int direction = player->getDirection();
 
     if(direction == 0) {
@@ -182,7 +187,7 @@ void Scene::movePlayer() {
     player->nextFrame();
 
     // Si il va à droite
-    if(direction > 0) {
+    if(direction > 0 && canMoveRight()) {
 
         // On bloque tout mouvement au delà de 7950 (frontière droite)
         if(player->pos().x() >= 8000) {
@@ -208,7 +213,7 @@ void Scene::movePlayer() {
         }
     }
     // Tout pareil mais à gauche
-    if(direction < 0) {
+    if(direction < 0 && canMoveLeft()) {
         if(player->pos().x() <= 0) {
             return;
         }
@@ -231,6 +236,8 @@ void Scene::movePlayer() {
  */
 void Scene::jumpPlayer() {
 
+    checkCollidingCoins();
+
     // Si l'animation est finie, on s'arrête là
     if(jumpAnimation->state() == QAbstractAnimation::Stopped) {
         player->stand();
@@ -241,27 +248,28 @@ void Scene::jumpPlayer() {
     QGraphicsItem *item = collidingPlatforms();
     if(item) {
         // Avec la tête...
-        if(player->isTouchingHead(item)) {
+        if(!canMoveUp()) {
 
-            jumpAnimation->stop();  // On stoppe l'animation (TODO: le faire redescendre plus doucement ?)
-
-            // Puis on le fait retomber sur sa dernière plateforme
-            if(lastPlatform) {
-                player->setPos(player->pos().x(), lastPlatform->pos().y() - player->boundingRect().height());
-                return;
-            }
-            // Ou le sol
-            if(!lastPlatform) {
-                player->setPos(player->pos().x(), groundLevel - player->boundingRect().height());
-                return;
-            }
+            jumpAnimation->stop();  // On stoppe l'animation
+            player->fall();         // Et on le fait retomber
+            fallTimer->start();
         }
         // Avec ses pieds...
-        else {
-            if(handleCollisionWithPlatform()) {
-                return; // On s'arrête là
-            }
+
+        // Si il touche une plateforme, on arrête la chute
+        else if(!canMoveDown()) {
+            jumpAnimation->stop();
+            player->stand();
+
+            QRectF itemRect = item->mapRectToScene(item->boundingRect());
+
+            QPointF finalPos(player->pos().x(), itemRect.y() - player->boundingRect().height());
+            lastPlatform = item;
+
+            player->setPos(finalPos);
+            return;
         }
+
     }
 
     if(fallTimer->isActive()) {
@@ -295,22 +303,25 @@ void Scene::jumpPlayer() {
  * Fonction appelée par le timer 'fallTimer', lorsque le joueur est en train de tomber
  */
 void Scene::fallPlayer() {
-    // On met à jour la position du joueur (TODO : gérer l'acceleration ?)
-    player->setPos(player->pos().x(), player->pos().y() + 20);
+
+    checkCollidingCoins();
+
+    // On met à jour la position du joueur
+    player->setPos(player->pos().x(), player->pos().y() + 15);
 
     QGraphicsItem *item = collidingPlatforms();
 
     // Si il touche une plateforme, on arrête la chute
-    if(item && handleCollisionWithPlatform()) {
+    if(!canMoveDown()) {
         fallTimer->stop();
-        player->walk();
-    }
-    // Si il arrive au sol, on arrête la chute
-    else if(player->pos().y() + player->boundingRect().height() >= groundLevel) {
-        player->setPos(player->pos().x(), groundLevel - player->boundingRect().height());
-        fallTimer->stop();
-        player->walk();
-        lastPlatform = 0;
+        player->stand();
+
+        QRectF itemRect = item->mapRectToScene(item->boundingRect());
+
+        QPointF finalPos(player->pos().x(), itemRect.y() - player->boundingRect().height());
+        lastPlatform = item;
+
+        player->setPos(finalPos);
     }
 }
 
@@ -331,7 +342,7 @@ void Scene::checkTimer() {
 }
 
 /**
- * @brief Renvoie le RigidBody touché par le joueur
+ * @brief Renvoie le RigidBody touché par le joueur, ou nullptr si le joueur ne touche rien
  */
 QGraphicsItem * Scene::collidingPlatforms() {
     QList<QGraphicsItem*> items = collidingItems(player);
@@ -339,37 +350,116 @@ QGraphicsItem * Scene::collidingPlatforms() {
         if(RigidBody *rigidbody = qgraphicsitem_cast<RigidBody *>(item)) {
             return rigidbody;
         }
-        //        if(AutreObjet *other = qgraphicsitem_cast<AutreObjet *>(item)) {
-        //            return other;
-        //        }
     }
-    return 0;
+    return nullptr;
 }
 
-// ça maybe on s'en tape
-void Scene::jumpStatusChanged(QAbstractAnimation::State newState, QAbstractAnimation::State oldState)
+void Scene::checkCollidingCoins()
 {
-    if(newState == QAbstractAnimation::Stopped && oldState == QAbstractAnimation::Running) {
-        //         handleCollisionWithPlatform(); //??
+    QList<QGraphicsItem*> items = collidingItems(player);
+    for(QGraphicsItem *item : items) {
+        RigidBody* rb = qgraphicsitem_cast<RigidBody*>(item);
+        RBodyType type = rb->getType();
+        if(type == iCoinGold) {
+            removeItem(rb);
+            soundManager->playSoundEffect(sCoin);
+        }
+        else if(type == tWater || type == tLava) {
+            qDebug() << "game over";
+            soundManager->playSoundEffect(sGameover);
+            setForegroundBrush(QColor(0, 0, 0, 127));
+        }
     }
 }
 
 /**
- * Gère les collision avec les plateformes (verticales seulement)
+ * Renvoie true si le joueur peut aller à droite, false si il est bloqué
  */
-bool Scene::handleCollisionWithPlatform() {
-    QGraphicsItem * platform = collidingPlatforms();
-    if(platform) {
-        QPointF platformPos = platform->pos();
-        if(player->isTouchingFoot(platform)) {
-            player->setPos(player->pos().x(), platformPos.y() - player->boundingRect().height());
-            lastPlatform = platform;
-            jumpAnimation->stop();
-            return true;
+bool Scene::canMoveRight()
+{
+    QRectF playerRect = player->mapRectToScene(player->boundingRect());
+
+    QList<QGraphicsItem*> items = collidingItems(player);
+    for(QGraphicsItem *item : items) {
+        RigidBody* rb = qgraphicsitem_cast<RigidBody*>(item);
+        if(rb->isSolid()) {
+            QRectF itemRect = rb->mapRectToScene(rb->boundingRect());
+            if(playerRect.right() <= itemRect.right()) {
+                return false;
+            }
         }
     }
-    else {
-        lastPlatform = 0;
+
+    return true;
+}
+
+/**
+ * Renvoie true si le joueur peut aller à gauche, false si il est bloqué
+ */
+bool Scene::canMoveLeft()
+{
+    QRectF playerRect = player->mapRectToScene(player->boundingRect());
+
+    QList<QGraphicsItem*> items = collidingItems(player);
+    for(QGraphicsItem *item : items) {
+        RigidBody* rb = qgraphicsitem_cast<RigidBody*>(item);
+        if(rb->isSolid()) {
+            QRectF itemRect = rb->mapRectToScene(rb->boundingRect());
+            if(playerRect.left() >= itemRect.left()) {
+                return false;
+            }
+        }
     }
-    return false;
+
+    return true;
+}
+
+/**
+ * Renvoie true si le joueur peut aller en haut, false si il est bloqué
+ */
+bool Scene::canMoveUp()
+{
+    QRectF playerRect = player->mapRectToScene(player->boundingRect());
+
+    QList<QGraphicsItem*> items = collidingItems(player);
+    for(QGraphicsItem *item : items) {
+        RigidBody* rb = qgraphicsitem_cast<RigidBody*>(item);
+        if(rb->isSolid()) {
+            QRectF itemRect = rb->mapRectToScene(rb->boundingRect());
+            // Si le haut du joueur est en dessous du bas de la plateforme
+            if(playerRect.top() >= itemRect.bottom()-10) {
+                // Si la plateforme est au dessus du joueur (et pas sur les côtés)
+                if(itemRect.center().x() >= playerRect.left() && itemRect.center().x() <= playerRect.right()) {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+/**
+ * Renvoie true si le joueur peut aller en bas, false si il est bloqué
+ */
+bool Scene::canMoveDown()
+{
+    QRectF playerRect = player->mapRectToScene(player->boundingRect());
+
+    QList<QGraphicsItem*> items = collidingItems(player);
+    for(QGraphicsItem *item : items) {
+        RigidBody* rb = qgraphicsitem_cast<RigidBody*>(item);
+        if(rb->isSolid()) {
+            QRectF itemRect = rb->mapRectToScene(rb->boundingRect());
+            // Si le bas du joueur est au dessus du haut de la plateforme
+            if(playerRect.bottom() <= itemRect.top()+24) {
+                // Si la plateforme est au dessus du joueur (et pas sur les côtés)
+                if(itemRect.center().x() >= playerRect.left() && itemRect.center().x() <= playerRect.right()) {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
 }

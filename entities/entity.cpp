@@ -2,5 +2,5 @@
 
 Entity::Entity()
 {
-    isSolid = false;
+    solid = false;
 }

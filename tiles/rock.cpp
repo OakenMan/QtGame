@@ -4,7 +4,7 @@ Rock::Rock():Tile()
 {
     bodyType = dRock;
 
-    isSolid = false;
+    solid = false;
 
     pixmap = QPixmap(":/items/ressources/Items/rock.png");
 }

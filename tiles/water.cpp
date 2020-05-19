@@ -3,7 +3,7 @@
 Water::Water():GenericPlatform()
 {
     bodyType = tWater;
-    isSolid = false;
+    solid = false;
 
     basic = QPixmap(":/tiles/ressources/Tiles/liquidWaterTop_mid.png");
     center = QPixmap(":/tiles/ressources/Tiles/liquidWater.png");

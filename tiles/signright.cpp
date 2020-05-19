@@ -4,7 +4,7 @@ SignRight::SignRight():Tile()
 {
     bodyType = dSignRight;
 
-    isSolid = false;
+    solid = false;
 
     pixmap = QPixmap(":/tiles/ressources/Tiles/signRight.png");
 }

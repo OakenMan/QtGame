@@ -17,7 +17,7 @@ SoundManager::SoundManager(QWidget *parent)
     gameover = new QSoundEffect();
     gameover->setSource(QUrl("qrc:/sounds/ressources/Sounds/gameOver.wav"));
     gameover->setLoopCount(0);
-    gameover->setVolume(.25f);
+    gameover->setVolume(1.0f);
 
     powerup = new QSoundEffect();
     powerup->setSource(QUrl("qrc:/sounds/ressources/Sounds/powerup.wav"));

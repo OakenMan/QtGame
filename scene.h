@@ -39,10 +39,18 @@ private slots:
 
     void checkTimer();
 
-    bool handleCollisionWithPlatform();
+//    bool handleCollisionWithPlatform();
+
+    bool canMoveRight();
+    bool canMoveLeft();
+    bool canMoveUp();
+    bool canMoveDown();
+
     QGraphicsItem * collidingPlatforms();
 
-    void jumpStatusChanged(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
+    void checkCollidingCoins();
+
+//    void jumpStatusChanged(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
 
 signals:
     void jumpFactorChanged(qreal);

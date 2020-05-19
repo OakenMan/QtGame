@@ -4,7 +4,7 @@ Snowhill::Snowhill():Tile()
 {
     bodyType = dBush;
 
-    isSolid = false;
+    solid = false;
 
     pixmap = QPixmap(":/items/ressources/Items/snowhill.png");
 }

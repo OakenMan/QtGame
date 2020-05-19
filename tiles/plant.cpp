@@ -4,7 +4,7 @@ Plant::Plant():Tile()
 {
     bodyType = dPlant;
 
-    isSolid = false;
+    solid = false;
 
     pixmap = QPixmap(":/items/ressources/Items/plant.png");
 }

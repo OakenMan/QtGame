@@ -4,7 +4,7 @@ SignExit::SignExit():Tile()
 {
     bodyType = dSignExit;
 
-    isSolid = false;
+    solid = false;
 
     pixmap = QPixmap(":/tiles/ressources/Tiles/signExit.png");
 }

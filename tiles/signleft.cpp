@@ -4,7 +4,7 @@ SignLeft::SignLeft():Tile()
 {
     bodyType = dSignLeft;
 
-    isSolid = false;
+    solid = false;
 
     pixmap = QPixmap(":/tiles/ressources/Tiles/signLeft.png");
 }

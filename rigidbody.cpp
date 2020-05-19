@@ -31,7 +31,7 @@
 
 RigidBody::RigidBody()
 {
-    isSolid = true;
+    solid = true;
 
     pixmap = QPixmap(":/tiles/ressources/Tiles/box.png");
 }
@@ -52,6 +52,11 @@ void RigidBody::paint(QPainter *painter, const QStyleOptionGraphicsItem *options
 RBodyType RigidBody::getType()
 {
     return bodyType;
+}
+
+bool RigidBody::isSolid()
+{
+    return solid;
 }
 
 RigidBody *createRigidBody(RBodyType type)

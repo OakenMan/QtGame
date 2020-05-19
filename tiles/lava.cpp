@@ -3,7 +3,7 @@
 Lava::Lava():GenericPlatform()
 {
     bodyType = tLava;
-    isSolid = false;
+    solid = false;
 
     basic = QPixmap(":/tiles/ressources/Tiles/liquidLavaTop_mid.png");
     center = QPixmap(":/tiles/ressources/Tiles/liquidLava.png");

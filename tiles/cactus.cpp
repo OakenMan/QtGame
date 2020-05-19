@@ -4,7 +4,7 @@ Cactus::Cactus():Tile()
 {
     bodyType = dCactus;
 
-    isSolid = false;
+    solid = false;
 
     pixmap = QPixmap(":/items/ressources/Items/cactus.png");
 }

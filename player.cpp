@@ -30,6 +30,9 @@ Player::Player()
     direction = 0;
     state = Standing;
     walkFrame = 0;
+
+    // Pour l'afficher devant les items et la déco
+    setZValue(1);
 }
 
 Player::~Player()
