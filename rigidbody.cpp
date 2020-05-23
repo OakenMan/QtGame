@@ -28,8 +28,9 @@
 #include "entities/coinbronze.h"
 #include "entities/coinsilver.h"
 #include "entities/coingold.h"
+#include "entities/slime.h"
 
-RigidBody::RigidBody()
+RigidBody::RigidBody():QGraphicsObject()
 {
     solid = true;
 
@@ -87,6 +88,7 @@ RigidBody *createRigidBody(RBodyType type)
     case dPlant:            return new Plant();
     case dPlantPurple:      return new PurplePlant();
     case dCactus:           return new Cactus();
+    case eSlime:            return new Slime();
     default:                return nullptr;
     }
 }

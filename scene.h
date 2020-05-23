@@ -20,59 +20,24 @@
 class Scene : public QGraphicsScene
 {
     Q_OBJECT
-    Q_PROPERTY(qreal jumpFactor READ getJumpFactor WRITE setJumpFactor NOTIFY jumpFactorChanged)
 
 public:
     explicit Scene(QScrollBar *s, QObject *parent=nullptr);
-
-    qreal getJumpFactor() const;
-    void setJumpFactor(const qreal &jumpFactor);
+    void startMobs();
 
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     bool eventFilter(QObject *watched, QEvent *event);
 
-private slots:
-    void movePlayer();
-    void jumpPlayer();
-    void fallPlayer();
+    void drawForeground(QPainter *painter, const QRectF &rect);
 
-    void checkTimer();
-
-//    bool handleCollisionWithPlatform();
-
-    bool canMoveRight();
-    bool canMoveLeft();
-    bool canMoveUp();
-    bool canMoveDown();
-
-    QGraphicsItem * collidingPlatforms();
-
-    void checkCollidingCoins();
-
-//    void jumpStatusChanged(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
-
-signals:
-    void jumpFactorChanged(qreal);
-    void playSound(SoundEffect);
+public slots:
+    void gameover();
 
 private:
     Player * player;
-    int velocity;
-    int jumpHeight;
-
-    QTimer * moveTimer;
-    QTimer * fallTimer;
-
-    QPropertyAnimation *jumpAnimation;
-    qreal jumpFactor;
-
-    QGraphicsItem *lastPlatform;
-    qreal groundLevel;
 
     QScrollBar *scroll;
-
-    SoundManager *soundManager;
 
 };
 

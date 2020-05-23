@@ -2,11 +2,13 @@
 #define RIGIDBODY_H
 
 #include <QGraphicsItem>
+#include <QGraphicsObject>
 
 #include "rbodytype.h"
 
-class RigidBody : public QGraphicsItem
+class RigidBody : public QGraphicsObject
 {
+
 public:
     RigidBody();
 

@@ -1,14 +1,26 @@
 #include "player.h"
 
 #include <QRectF>
+#include <QPainter>
+#include <QEvent>
+#include <QKeyEvent>
 
 #include <QDebug>
-#include <QPainter>
 
-Player::Player()
+#include "physicsengine.h"
+#include "soundmanager.h"
+#include "interface.h"
+#include "scene.h"
+
+/**
+ * Constructeur
+ */
+Player::Player():Entity()
 {
     setFlags(QGraphicsItem::ItemClipsToShape);
+    setFlags(QGraphicsItem::ItemIsFocusable);   // Pour recevoir les input clavier
 
+    // Initialisation des pixmap
     standPixmap = QPixmap(":/player/ressources/Player/p1_stand.png");
     jumpPixmap = QPixmap(":/player/ressources/Player/p1_jump.png");
     hurtPixmap = QPixmap(":/player/ressources/Player/p1_hurt.png");
@@ -27,39 +39,128 @@ Player::Player()
 
     pixmap = standPixmap;
 
+    setTransformOriginPoint(boundingRect().center());
+
+    // Initialisation des variables
     direction = 0;
     state = Standing;
     walkFrame = 0;
+    dead = false;
+
+    // Description de l'animation de saut
+    jumpAnimation = new QPropertyAnimation(this);
+    jumpAnimation->setTargetObject(this);
+    jumpAnimation->setPropertyName("jumpFactor");
+    jumpAnimation->setStartValue(0);
+    jumpAnimation->setKeyValueAt(0.5, 1);
+    jumpAnimation->setEndValue(0);
+    jumpAnimation->setDuration(700);
+    jumpAnimation->setEasingCurve(QEasingCurve::OutInQuad);
+    connect(this, &Player::jumpFactorChanged, this, &Player::jumpPlayer);
+
+    // Timer pour le mouvement
+    moveTimer = new QTimer(this);
+    moveTimer->setTimerType(Qt::PreciseTimer);
+    moveTimer->setInterval(20); // <--- durée d'une frame en ms (donc fps ~= 1000/20 = 50)
+    connect(moveTimer, &QTimer::timeout, this, &Player::movePlayer);
+
+    // Timer pour la chute
+    fallTimer = new QTimer(this);
+    fallTimer->setInterval(20); // <--- durée d'une frame en ms
+    fallTimer->setTimerType(Qt::PreciseTimer);
+    connect(fallTimer, &QTimer::timeout, this, &Player::fallPlayer);
 
     // Pour l'afficher devant les items et la déco
     setZValue(1);
 }
 
+/**
+ * Destructeur
+ */
 Player::~Player()
 {
 
 }
 
-// Le joueur fait 1 bloc de large et 1 bloc et demi de haut
+/*===== SURCHARGES DE MÉTHODES HÉRITÉES =====*/
 QRectF Player::boundingRect() const {
     return QRectF(0, 0, DEFAULT_TILE_SIZE, 1.5*DEFAULT_TILE_SIZE);
+}
+
+void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget)
+{
+    painter->drawPixmap(boundingRect().toRect(), pixmap);
+
+    //    QRectF head(7, 0, boundingRect().width()-14, 5);
+    //    QRectF foot(7, boundingRect().height(), boundingRect().width()-14, 5);
+    //    QRectF body(boundingRect());
+
+    //    QBrush brush1(Qt::blue);
+    //    QBrush brush2(Qt::red);
+
+    //    painter->fillRect(head, brush1);
+    //    painter->fillRect(foot, brush1);
+
+    //    RigidBody *rb = collidingPlatforms();
+    //    if(rb) {
+    //        painter->fillRect(foot, brush2);
+    //    }
+
+    //    painter->drawRect(head);
+    //    painter->drawRect(foot);
+    //    painter->drawRect(body);
+
+    Q_UNUSED(widget);
+    Q_UNUSED(options);
+}
+
+/*===== NOUVELLES MÉTHODES (GETTERS, SETTERS...) =====*/
+int Player::getDirection() const {
+    return direction;
+}
+
+void Player::addDirection(int newDirection) {
+    if(direction == newDirection) {
+        return;
+    }
+
+    direction += newDirection;
+    checkTimer();
+
+    // Changement de direction du sprite
+    if(direction == -1) {
+        setTransform(QTransform(-1, 0, 0, 1, boundingRect().width(), 0));
+    }
+    else if(direction == 1){
+        setTransform(QTransform());
+    }
 }
 
 void Player::stand() {
     state = Standing;
     pixmap = standPixmap;
+    update(boundingRect());
 }
 
 void Player::jump() {
-    state = Jumping;
-    pixmap = jumpPixmap;
+    if(fallTimer->isActive()) {     // On ne peut pas sauter si on tombe
+        return;
+    }
+    else {
+        if(jumpAnimation->state() == QAbstractAnimation::Stopped) {
+            jumpAnimation->start();
+            state = Jumping;
+            pixmap = jumpPixmap;
+            SoundManager::playSound(sJump);
+        }
+    }
 }
 
 void Player::walk() {
-    if(state == Walking) {
-        return;
-    }
-    state = Walking;
+    //    if(state == Walking) {
+    //        return;
+    //    }
+    //    state = Walking;
 }
 
 void Player::fall() {
@@ -71,6 +172,9 @@ bool Player::isFalling() {
     return state == Falling;
 }
 
+/**
+ * Change la frame d'animation de marche
+ */
 void Player::nextFrame()
 {
     if(state==Falling || state==Jumping) {
@@ -98,36 +202,269 @@ void Player::nextFrame()
     }
 }
 
-int Player::getDirection() const {
-    return direction;
+/*===== GESTION DES DÉPLACEMENTS DU JOUEUR =====*/
+qreal Player::getJumpFactor() const
+{
+    return jumpFactor;
 }
 
-void Player::addDirection(int newDirection) {
-    if(direction == newDirection) {
+void Player::setJumpFactor(const qreal &newJumpFactor)
+{
+    if(jumpFactor == newJumpFactor) {
         return;
     }
 
-    direction += newDirection;
+    jumpFactor = newJumpFactor;
+    emit jumpFactorChanged(jumpFactor);
+}
 
-    setTransformOriginPoint(boundingRect().center());
+void Player::setLastPlatform(QGraphicsItem *item)
+{
+    lastPlatform = item;
+}
 
-    if(direction == -1) {
-        setTransform(QTransform(-1, 0, 0, 1, boundingRect().width(), 0));
+void Player::movePlayer() {
+
+    checkCollisions();
+
+    if(direction == 0) {
+        return;
     }
-    else if(direction == 1){
-        setTransform(QTransform());
+
+    // Si le joueur n'est pas en train de tomber ou sauter
+    if(!isFalling() && jumpAnimation->state() == QAbstractAnimation::Stopped) {
+        // Qu'il ne touche aucune plateforme et qu'il n'est pas en train de sauter
+        //        if(!(lastPlatform && isTouchingPlatform(lastPlatform)) && jumpAnimation->state() == QAbstractAnimation::Stopped) {
+        //            if(lastPlatform) {
+        //                // Alors il tombe
+        //                fallTimer->start();
+        //                fall();
+        //            }
+        //        }
+        if(PhysicsEngine::canMoveDown(this)) {
+            fallTimer->start();
+            fall();
+        }
+    }
+
+    const int dx = direction * velocity;
+
+    nextFrame();
+
+    // Si il va à droite
+    if(direction > 0 && PhysicsEngine::canMoveRight(this, false)) {
+
+        // On bloque tout mouvement au delà de 7950 (frontière droite)
+        if(pos().x() >= 8000) {
+            return;
+        }
+
+        // On déplace le joueur
+        moveBy(dx, 0);
+
+        Interface::moveInterface(dx);
+    }
+    // Tout pareil mais à gauche
+    if(direction < 0 && PhysicsEngine::canMoveLeft(this, false)) {
+        if(pos().x() <= 0) {
+            return;
+        }
+        moveBy(dx, 0);
+
+        Interface::moveInterface(dx);
+    }
+
+    return;
+}
+
+void Player::jumpPlayer() {
+
+    checkCollisions();
+
+    // Si l'animation est finie, on s'arrête là
+    if(jumpAnimation->state() == QAbstractAnimation::Stopped) {
+        stand();
+        return;
+    }
+
+    // Si le joueur touche une plateforme
+    RigidBody *item = collidingPlatforms();
+
+    if(item) {
+        // Avec la tête ---> on le fait tomber
+        if(isTouchingHead(item)) {
+            qDebug() << "HEAD TOUCHED";
+            jumpAnimation->stop();
+            fallTimer->start();
+            fall();
+            return;
+        }
+        // Avec les pieds ---> on arrête la chute
+        else if(isTouchingFoot(item)) {
+            qDebug() << "FOOT TOUCHED";
+            jumpAnimation->stop();
+            stand();
+
+            QRectF itemRect = item->mapRectToScene(item->boundingRect());
+            QPointF finalPos(pos().x(), itemRect.y() - boundingRect().height());
+            lastPlatform = item;
+            setPos(finalPos);
+            return;
+        }
+    }
+
+    if(fallTimer->isActive()) {
+        return;
+    }
+
+    // y = future position Y du joueur
+    qreal y = (groundLevel - boundingRect().height()) - jumpAnimation->currentValue().toReal() * jumpHeight;
+    if(lastPlatform) {
+        y = (lastPlatform->pos().y() - boundingRect().height()) - jumpAnimation->currentValue().toReal() * jumpHeight;
+        if(!(lastPlatform && isTouchingPlatform(lastPlatform)) && jumpFactor < 0.1) {
+            if((pos().x() < lastPlatform->pos().x()) || (pos().x() > lastPlatform->pos().x() + lastPlatform->boundingRect().width())) {
+                if(!lastPlatform) {
+                    lastPlatform = 0;
+                }
+                if(pos().y() < groundLevel) {
+                    fall();
+                    fallTimer->start();
+                    return;
+                }
+            }
+        }
+    }
+
+    // On met à jour la position du joueur
+    setPos(pos().x(), y);
+}
+
+void Player::fallPlayer() {
+
+    checkCollisions();
+
+    // On met à jour la position du joueur
+    setPos(pos().x(), pos().y() + 15);
+
+    RigidBody *item = collidingPlatforms();
+
+    // Si il touche une plateforme, on arrête la chute
+    if(item) {
+        if(isTouchingFoot(item)) {
+            fallTimer->stop();
+            stand();
+
+            QRectF itemRect = item->mapRectToScene(item->boundingRect());
+            QPointF finalPos(pos().x(), itemRect.y() - boundingRect().height());
+            lastPlatform = item;
+            setPos(finalPos);
+        }
+    }
+
+    qDebug() << pos().y();
+    if(pos().y() > 720) {
+        die();
     }
 }
 
+void Player::checkTimer() {
+    // Si il ne bouge pas, on arrête le timer
+    if(direction == 0) {
+        moveTimer->stop();
+        stand();
+    }
+    // Si le timer était éteind, on le redémarre
+    else if(!moveTimer->isActive()) {
+        moveTimer->start();
+        walk();
+    }
+}
+
+/*===== DETECTION DES COLLISIONS (+ précis qu'avec le PhysicsEngine...) =====*/
+RigidBody * Player::collidingPlatforms() {
+    RigidBody *rb = nullptr;
+
+    QList<QGraphicsItem*> items = collidingItems();
+    foreach(QGraphicsItem *item, items) {
+        if(RigidBody *rigidbody = qgraphicsitem_cast<RigidBody *>(item)) {
+            if(rigidbody->isSolid()) {
+                // On retourne en priorité les objets qui touche les pieds
+                if(isTouchingFoot(rigidbody)) {
+                    return rigidbody;
+                }
+                // Ou ceux qui touchent la tête
+                else if(isTouchingHead(rigidbody)) {
+                    return rigidbody;
+                }
+                // Puis les autres
+                else {
+                    rb = rigidbody;
+                }
+            }
+        }
+    }
+
+    return rb;
+}
+
+void Player::checkCollisions()
+{
+    QList<QGraphicsItem*> items = collidingItems();
+
+    for(QGraphicsItem *item : items) {
+        RigidBody* rb = qgraphicsitem_cast<RigidBody*>(item);
+        RBodyType type = rb->getType();
+
+        // Si c'est une pièce
+        if(type == iCoinGold) {
+            delete rb;
+            SoundManager::playSound(sCoin);
+        }
+
+        // Si c'est de l'eau ou de la lave
+        else if(type == tWater || type == tLava) {
+            die();
+        }
+
+        // Si c'est un mob
+        else if(rb->type() == UserType + 5) {
+            // Mais qu'on lui saute dessus
+            //            if(boundingRect().bottom() <= rb->boundingRect().top() + 24) {
+            if(isTouchingFoot(rb) && !collidesWithItem(rb)) {
+                delete rb;
+            }
+            // Sinon
+            else {
+                die();
+            }
+        }
+        else if(type == tBox || type == tBoxEmpty || type == tBoxAlt) {
+            if(isTouchingHead(rb) && jumpAnimation->state() != QAbstractAnimation::Stopped) {
+                QTimer::singleShot(100, rb, SLOT(breakBox()));
+            }
+        }
+    }
+}
+
+void Player::die()
+{
+    if(dead) {
+        return;
+    }
+    dead = true;
+    pixmap = hurtPixmap;
+    QTimer::singleShot(500, Qt::PreciseTimer, this->scene(), SLOT(gameover()));
+}
+
 bool Player::isTouchingFoot(QGraphicsItem *item){
-    QRectF rect(pos().x(), (pos().y() + boundingRect().height()) -5, boundingRect().width(), 5);
+    QRectF rect(pos().x()+7, (pos().y() + boundingRect().height()), boundingRect().width()-14, 5);
     QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), item->boundingRect().height());
 
     return rect.intersects(otherRect);
 }
 
 bool Player::isTouchingHead(QGraphicsItem *item){
-    QRectF rect(pos().x(), pos().y(), boundingRect().width(), 5);
+    QRectF rect(pos().x()+7, pos().y(), boundingRect().width()-14, 5);
     QRectF otherRect(item->pos().x(), item->pos().y(), item->boundingRect().width(), item->boundingRect().height());
 
     return rect.intersects(otherRect);
