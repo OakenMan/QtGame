@@ -33,6 +33,8 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, par
 
     scroll->setValue(0);
 
+    dead = false;
+
     // Gestion du son dans la scène
     new SoundManager();
 
@@ -43,7 +45,9 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, par
     this->installEventFilter(this);
 
     // Gestion de l'interface
-    new Interface(this, player, scroll);
+    Interface *interface = new Interface(this, player, scroll);
+
+    connect(player, &Player::playerMoved, interface, &Interface::moveInterface);
 }
 
 void Scene::startMobs()
@@ -56,6 +60,12 @@ void Scene::startMobs()
             mob->hasAI(true);
         }
     }
+}
+
+void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
+{
+    qDebug() << "mouse move";
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
 /**
@@ -120,29 +130,57 @@ void Scene::drawForeground(QPainter *painter, const QRectF &rect)
 {
     Q_UNUSED(rect);
 
+    if(dead) {
+        setForegroundBrush(QColor(0, 0, 0, 127));
+        return;
+    }
+
+    int v = scroll->value();
+
     QPixmap heart(":/hud/ressources/HUD/hud_heartFull.png");
     QPixmap heartEmpty(":/hud/ressources/HUD/hud_heartEmpty.png");
-    painter->drawPixmap(10, 20, heart);
-    painter->drawPixmap(70, 20, heart);
-    painter->drawPixmap(130, 20, heartEmpty);
+
+    if(player->getHealth() == 0) {
+        painter->drawPixmap(v+10, 20, heartEmpty);
+        painter->drawPixmap(v+70, 20, heartEmpty);
+        painter->drawPixmap(v+130, 20, heartEmpty);
+    }
+    if(player->getHealth() == 1) {
+        painter->drawPixmap(v+10, 20, heart);
+        painter->drawPixmap(v+70, 20, heartEmpty);
+        painter->drawPixmap(v+130, 20, heartEmpty);
+    }
+    else if(player->getHealth() == 2) {
+        painter->drawPixmap(v+10, 20, heart);
+        painter->drawPixmap(v+70, 20, heart);
+        painter->drawPixmap(v+130, 20, heartEmpty);
+    }
+    else if(player->getHealth() == 3) {
+        painter->drawPixmap(v+10, 20, heart);
+        painter->drawPixmap(v+70, 20, heart);
+        painter->drawPixmap(v+130, 20, heart);
+    }
 
     QPixmap coin(":/hud/ressources/HUD/hud_coins.png");
-    painter->drawPixmap(1140, 20, 47, 47, coin);
+    painter->drawPixmap(v+1140, 20, 47, 47, coin);
 
     QPixmap zero(":/hud/ressources/HUD/hud_0.png");
-    painter->drawPixmap(1200, 25, 28, 38, zero);
-    painter->drawPixmap(1235, 25, 28, 38, zero);
+    painter->drawPixmap(v+1200, 25, 28, 38, zero);
+    painter->drawPixmap(v+1235, 25, 28, 38, zero);
 
     QPixmap box(":/tiles/ressources/Tiles/box.png");
-    painter->drawPixmap(1005, 20, 47, 47, box);
+    painter->drawPixmap(v+1005, 20, 47, 47, box);
 
-    painter->drawPixmap(1065, 25, 28, 38, zero);
-    painter->drawPixmap(1100, 25, 28, 38, zero);
+    painter->drawPixmap(v+1065, 25, 28, 38, zero);
+    painter->drawPixmap(v+1100, 25, 28, 38, zero);
 }
 
 void Scene::gameover()
 {
+    if(dead) {
+        return;
+    }
+    dead = true;
     delete player;
     SoundManager::playSound(sGameover);
-    setForegroundBrush(QColor(0, 0, 0, 127));
 }

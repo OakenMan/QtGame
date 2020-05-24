@@ -47,6 +47,10 @@ Player::Player():Entity()
     walkFrame = 0;
     dead = false;
 
+    health = 3;
+    coins = 0;
+    boxes = 0;
+
     // Description de l'animation de saut
     jumpAnimation = new QPropertyAnimation(this);
     jumpAnimation->setTargetObject(this);
@@ -202,6 +206,18 @@ void Player::nextFrame()
     }
 }
 
+int Player::getHealth() {
+    return health;
+}
+
+int Player::getCoins() {
+    return coins;
+}
+
+int Player::getBoxes() {
+    return boxes;
+}
+
 /*===== GESTION DES DÉPLACEMENTS DU JOUEUR =====*/
 qreal Player::getJumpFactor() const
 {
@@ -233,17 +249,13 @@ void Player::movePlayer() {
 
     // Si le joueur n'est pas en train de tomber ou sauter
     if(!isFalling() && jumpAnimation->state() == QAbstractAnimation::Stopped) {
-        // Qu'il ne touche aucune plateforme et qu'il n'est pas en train de sauter
-        //        if(!(lastPlatform && isTouchingPlatform(lastPlatform)) && jumpAnimation->state() == QAbstractAnimation::Stopped) {
-        //            if(lastPlatform) {
-        //                // Alors il tombe
-        //                fallTimer->start();
-        //                fall();
-        //            }
-        //        }
-        if(PhysicsEngine::canMoveDown(this)) {
-            fallTimer->start();
-            fall();
+        //         Qu'il ne touche aucune plateforme et qu'il n'est pas en train de sauter
+        if(!(lastPlatform && isTouchingPlatform(lastPlatform)) && jumpAnimation->state() == QAbstractAnimation::Stopped) {
+            if(lastPlatform) {
+                // Alors il tombe
+                fallTimer->start();
+                fall();
+            }
         }
     }
 
@@ -254,24 +266,22 @@ void Player::movePlayer() {
     // Si il va à droite
     if(direction > 0 && PhysicsEngine::canMoveRight(this, false)) {
 
-        // On bloque tout mouvement au delà de 7950 (frontière droite)
         if(pos().x() >= 8000) {
             return;
         }
 
-        // On déplace le joueur
         moveBy(dx, 0);
-
-        Interface::moveInterface(dx);
+        emit playerMoved(dx);
     }
-    // Tout pareil mais à gauche
+    // Si il va à gauche
     if(direction < 0 && PhysicsEngine::canMoveLeft(this, false)) {
+
         if(pos().x() <= 0) {
             return;
         }
-        moveBy(dx, 0);
 
-        Interface::moveInterface(dx);
+        moveBy(dx, 0);
+        emit playerMoved(dx);
     }
 
     return;
@@ -419,6 +429,7 @@ void Player::checkCollisions()
         if(type == iCoinGold) {
             delete rb;
             SoundManager::playSound(sCoin);
+            coins++;
         }
 
         // Si c'est de l'eau ou de la lave
@@ -435,7 +446,9 @@ void Player::checkCollisions()
             }
             // Sinon
             else {
-                die();
+                health--;
+                delete rb;
+
             }
         }
         else if(type == tBox || type == tBoxEmpty || type == tBoxAlt) {

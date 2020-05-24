@@ -1,5 +1,11 @@
 #include "soundmanager.h"
 
+QSoundEffect * SoundManager::jump;
+QSoundEffect * SoundManager::coin;
+QSoundEffect * SoundManager::powerup;
+QSoundEffect * SoundManager::gameover;
+QMediaPlayer * SoundManager::music;
+
 SoundManager::SoundManager(QWidget *parent)
 {
     Q_UNUSED(parent);
@@ -33,7 +39,8 @@ SoundManager::~SoundManager()
 
 }
 
-void SoundManager::playSoundEffect(SoundEffect effect) {
+void SoundManager::playSound(SoundEffect effect)
+{
     switch(effect) {
     case mLevel1:   music->play();      break;
     case sJump:     jump->play();       break;

@@ -10,4 +10,6 @@ Water::Water():GenericPlatform()
     mid = QPixmap(":/tiles/ressources/Tiles/liquidWaterTop_mid.png");
     left = QPixmap(":/tiles/ressources/Tiles/liquidWaterTop_mid.png");
     right = QPixmap(":/tiles/ressources/Tiles/liquidWaterTop_mid.png");
+
+    setZValue(2);
 }

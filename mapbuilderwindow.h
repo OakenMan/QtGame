@@ -80,6 +80,8 @@ private slots:
 
     void on_dCactusBtn_clicked();
 
+    void on_eSlimeBtn_clicked();
+
 private:
     Ui::MapBuilderWindow *ui;
     MapBuilder *scene;

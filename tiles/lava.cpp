@@ -10,4 +10,6 @@ Lava::Lava():GenericPlatform()
     mid = QPixmap(":/tiles/ressources/Tiles/liquidLavaTop_mid.png");
     left = QPixmap(":/tiles/ressources/Tiles/liquidLavaTop_mid.png");
     right = QPixmap(":/tiles/ressources/Tiles/liquidLavaTop_mid.png");
+
+    setZValue(2);
 }

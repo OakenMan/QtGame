@@ -485,6 +485,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="defaultTileBtn_36">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -517,6 +520,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="defaultTileBtn_37">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -549,6 +555,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="defaultTileBtn_38">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -636,6 +645,9 @@
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QPushButton" name="iCoinBronzeBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -668,6 +680,9 @@
       </item>
       <item row="1" column="0">
        <widget class="QPushButton" name="iKeyBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -700,6 +715,9 @@
       </item>
       <item row="0" column="1">
        <widget class="QPushButton" name="iCoinSilverBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -844,7 +862,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
-       <widget class="QPushButton" name="defaultTileBtn_21">
+       <widget class="QPushButton" name="eSlimeBtn">
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -876,7 +894,10 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QPushButton" name="defaultTileBtn_22">
+       <widget class="QPushButton" name="eBlockerBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -908,7 +929,10 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QPushButton" name="defaultTileBtn_23">
+       <widget class="QPushButton" name="eFlyBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -940,7 +964,10 @@
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="QPushButton" name="defaultTileBtn_24">
+       <widget class="QPushButton" name="eSnailBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -972,7 +999,10 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QPushButton" name="defaultTileBtn_25">
+       <widget class="QPushButton" name="ePockerBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -1004,7 +1034,10 @@
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QPushButton" name="defaultTileBtn_26">
+       <widget class="QPushButton" name="eFishBtn">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="minimumSize">
          <size>
           <width>48</width>

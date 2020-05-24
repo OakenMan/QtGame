@@ -41,9 +41,9 @@ MapBuilder::MapBuilder(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000
 
     setCurrentBlock(pGrassPlatform);
 
-    Player *player = new Player();
-    addItem(player);
-    player->setPos(48, 672 - player->boundingRect().height());
+//    Player *player = new Player();
+//    addItem(player);
+//    player->setPos(48, 672 - player->boundingRect().height());
 }
 
 void MapBuilder::setCurrentBlock(RBodyType block)
@@ -98,12 +98,14 @@ void MapBuilder::drawBackground(QPainter *painter, const QRectF &rect)
 void MapBuilder::placeBlock(QPointF pos)
 {
     if(!(items(pos).isEmpty())) {
-//        return;
+        return;
     }
 
     QPointF newPos(((int)pos.x() / 48) * 48, ((int)pos.y() / 48) * 48);
 
     RigidBody *rb = createRigidBody(currentRBody);
+
+    newPos.setY(newPos.y() + 48 - rb->boundingRect().height());
 
     addItem(rb);
 

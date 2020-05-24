@@ -1,0 +1,22 @@
+BUGS :
+- le joueur transpèrce les plateformes quand il saute
+- le joueur se TP à une plateforme collée à lui quand il saute
+- le joueur traverse les plateformes après un saut
+
+
+
+GAMEPLAY :
+- 3 niveaux (herbe, neige, donjon ?)
+- des pièces à ramasser (high score)
+- des boites qu'on peut poser pour faciliter le chemin
+- 3 vies
+    quand on touche un mon on pert 1 de vie
+    quand on tombe dans l'eau/la lave/le vide on meurt
+- quand on meurt on recommence au début du niveau
+- mobs :
+    un slime qui fait des allers retours
+    une mouche qui fait des allers retours
+    un truc qui sort du sol
+- items :
+    champignons (++vie)
+    boites (++boites)

@@ -253,3 +253,9 @@ void MapBuilderWindow::on_dCactusBtn_clicked()
     scene->setCurrentBlock(dCactus);
     ui->currentRBDisplay->setIcon(ui->dCactusBtn->icon());
 }
+
+void MapBuilderWindow::on_eSlimeBtn_clicked()
+{
+    scene->setCurrentBlock(eSlime);
+    ui->currentRBDisplay->setIcon(ui->eSlimeBtn->icon());
+}

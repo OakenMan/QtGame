@@ -1,4 +1,4 @@
-#ifndef PLAYER_H
+﻿#ifndef PLAYER_H
 #define PLAYER_H
 
 #include <QAbstractAnimation>
@@ -45,6 +45,10 @@ public:
 
     void nextFrame();
 
+    int getHealth();
+    int getCoins();
+    int getBoxes();
+
 private slots:
     void movePlayer();
     void jumpPlayer();
@@ -53,6 +57,7 @@ private slots:
 
 signals:
     void jumpFactorChanged(qreal);
+    void playerMoved(int);
 
 private:
     const int velocity = 7;
@@ -66,6 +71,10 @@ private:
     };
     int direction;
     State state;
+
+    int health;
+    int coins;
+    int boxes;
 
     QPixmap walkPixmap;
     QPixmap standPixmap;

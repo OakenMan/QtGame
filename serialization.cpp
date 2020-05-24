@@ -6,7 +6,6 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 
-#include "Physics/rigidbody.h"
 #include "mapbuilder.h"
 
 /**
@@ -26,8 +25,12 @@ void loadMap(const QJsonDocument loadData, QGraphicsScene *scene)
 
         RigidBody * block = createRigidBody(type);
 
+        QPointF newPos(x, y);
+        newPos.setY(newPos.y() + 48 - block->boundingRect().height());
+
         scene->addItem(block);
-        block->setPos(block->mapFromScene(QPointF(x, y)));
+//        block->setPos(block->mapFromScene(QPointF(x, y)));
+        block->setPos(newPos);
 
         scene->setBackgroundBrush(QBrush(QPixmap(background)));
     }

@@ -23,22 +23,24 @@ public:
     explicit SoundManager(QWidget *parent = 0);
     ~SoundManager();
 
+    static void playSound(SoundEffect);
+
 private:
 
     // Effets sonores
-    QSoundEffect *jump;
-    QSoundEffect *coin;
-    QSoundEffect *gameover;
-    QSoundEffect *powerup;
+    static QSoundEffect *jump;
+    static QSoundEffect *coin;
+    static QSoundEffect *gameover;
+    static QSoundEffect *powerup;
 
     // Musiques
-    QMediaPlayer *music;
+    static QMediaPlayer *music;
 
-signals:
-   void stopMusic();
+//signals:
+//   void stopMusic();
 
-public slots:
-   void playSoundEffect(SoundEffect);
+//public slots:
+//   void playSoundEffect(SoundEffect);
 };
 
 #endif // SOUNDMANAGER_H

@@ -27,6 +27,7 @@ public:
 
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
     bool eventFilter(QObject *watched, QEvent *event);
 
     void drawForeground(QPainter *painter, const QRectF &rect);
@@ -36,8 +37,9 @@ public slots:
 
 private:
     Player * player;
-
     QScrollBar *scroll;
+
+    bool dead;
 
 };
 

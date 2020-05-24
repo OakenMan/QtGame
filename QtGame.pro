@@ -25,12 +25,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-    Physics/collision.cpp \
-    Physics/kinematicbody.cpp \
-    Physics/physicbody.cpp \
-    Physics/physicsengine.cpp \
-    Physics/rigidbody.cpp \
-    Physics/staticbody.cpp \
         main.cpp \
         mainwindow.cpp \
     scene.cpp \
@@ -67,22 +61,20 @@ SOURCES += \
     tiles/plant.cpp \
     tiles/cactus.cpp \
     launcher.cpp \
-    soundmanager.cpp
+    soundmanager.cpp \
+    physicsengine.cpp \
+    entities/genericmob.cpp \
+    entities/slime.cpp \
+    rigidbody.cpp \
+    interface.cpp
 
 HEADERS += \
-    Physics/collision.h \
-    Physics/kinematicbody.h \
-    Physics/physicbody.h \
-    Physics/physicsengine.h \
-    Physics/rigidbody.h \
-    Physics/staticbody.h \
         mainwindow.h \
     scene.h \
     player.h \
     rigidbody.h \
     mapbuilderwindow.h \
     mapbuilder.h \
-    blocks.h \
     serialization.h \
     tiles/tile.h \
     tiles/genericplatform.h \
@@ -115,7 +107,11 @@ HEADERS += \
     tiles/cactus.h \
     launcher.h \
     soundmanager.h \
-    soundeffect.h
+    soundeffect.h \
+    physicsengine.h \
+    entities/genericmob.h \
+    entities/slime.h \
+    interface.h
 
 FORMS += \
         mainwindow.ui \
@@ -124,3 +120,6 @@ FORMS += \
 
 RESOURCES += \
     ressources.qrc
+
+DISTFILES += \
+    TODO
