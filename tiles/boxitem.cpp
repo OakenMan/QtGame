@@ -6,3 +6,9 @@ BoxItem::BoxItem():Tile()
 
     pixmap = QPixmap(":/tiles/ressources/Tiles/boxItem.png");
 }
+
+void BoxItem::breakBox()
+{
+
+
+}

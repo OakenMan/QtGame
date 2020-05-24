@@ -1,9 +1,5 @@
 #include "interface.h"
 
-QScrollBar *Interface::scroll;
-Scene * Interface::scene;
-Player * Interface::player;
-
 Interface::Interface(Scene *newScene, Player *newPlayer, QScrollBar *s)
 {
     scroll = s;

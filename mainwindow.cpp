@@ -27,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // On fait disparaitre les scrollbars
 //    ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    ui->graphicsView->setMouseTracking(true);
 }
 
 MainWindow::~MainWindow()
@@ -52,4 +54,6 @@ void MainWindow::on_actionLoad_map_triggered()
     loadMap(loadDoc, scene);
 
     scene->startMobs();
+
+    ui->graphicsView->horizontalScrollBar()->setValue(0);
 }

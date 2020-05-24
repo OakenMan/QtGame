@@ -29,7 +29,6 @@ void loadMap(const QJsonDocument loadData, QGraphicsScene *scene)
         newPos.setY(newPos.y() + 48 - block->boundingRect().height());
 
         scene->addItem(block);
-//        block->setPos(block->mapFromScene(QPointF(x, y)));
         block->setPos(newPos);
 
         scene->setBackgroundBrush(QBrush(QPixmap(background)));

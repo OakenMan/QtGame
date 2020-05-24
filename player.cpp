@@ -218,6 +218,11 @@ int Player::getBoxes() {
     return boxes;
 }
 
+void Player::setBoxes(int boxes)
+{
+    this->boxes = boxes;
+}
+
 /*===== GESTION DES DÉPLACEMENTS DU JOUEUR =====*/
 qreal Player::getJumpFactor() const
 {
@@ -303,7 +308,6 @@ void Player::jumpPlayer() {
     if(item) {
         // Avec la tête ---> on le fait tomber
         if(isTouchingHead(item)) {
-            qDebug() << "HEAD TOUCHED";
             jumpAnimation->stop();
             fallTimer->start();
             fall();
@@ -311,7 +315,6 @@ void Player::jumpPlayer() {
         }
         // Avec les pieds ---> on arrête la chute
         else if(isTouchingFoot(item)) {
-            qDebug() << "FOOT TOUCHED";
             jumpAnimation->stop();
             stand();
 
@@ -371,7 +374,6 @@ void Player::fallPlayer() {
         }
     }
 
-    qDebug() << pos().y();
     if(pos().y() > 720) {
         die();
     }
@@ -430,6 +432,7 @@ void Player::checkCollisions()
             delete rb;
             SoundManager::playSound(sCoin);
             coins++;
+            emit statsChanged();
         }
 
         // Si c'est de l'eau ou de la lave
@@ -441,17 +444,24 @@ void Player::checkCollisions()
         else if(rb->type() == UserType + 5) {
             // Mais qu'on lui saute dessus
             //            if(boundingRect().bottom() <= rb->boundingRect().top() + 24) {
-            if(isTouchingFoot(rb) && !collidesWithItem(rb)) {
+            if(isTouchingFoot(rb)) {
                 delete rb;
             }
             // Sinon
             else {
-                health--;
                 delete rb;
-
+                health--;
+                emit statsChanged();
             }
         }
-        else if(type == tBox || type == tBoxEmpty || type == tBoxAlt) {
+        else if(type == tBox) {
+            if(isTouchingHead(rb) && jumpAnimation->state() != QAbstractAnimation::Stopped) {
+                QTimer::singleShot(100, rb, SLOT(breakBox()));
+                boxes++;
+                emit statsChanged();
+            }
+        }
+        else if(type == tBoxItem || type == tBoxCoin) {
             if(isTouchingHead(rb) && jumpAnimation->state() != QAbstractAnimation::Stopped) {
                 QTimer::singleShot(100, rb, SLOT(breakBox()));
             }

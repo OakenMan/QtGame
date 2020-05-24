@@ -38,9 +38,8 @@ public slots:
 private:
     Player * player;
     QScrollBar *scroll;
-
+    QPointF cursor;
     bool dead;
-
 };
 
 #endif // SCENE_H

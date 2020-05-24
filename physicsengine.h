@@ -16,6 +16,10 @@
 
 #include "entities/entity.h"
 
+/**
+ * Sorte de moteur physique qui n'en est pas vraiment un.
+ * Contient des méthodes statiques permettant de tester les collisions entre une entité et le reste de la map.
+ */
 class PhysicsEngine: public QObject
 {
     Q_OBJECT

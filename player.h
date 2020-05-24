@@ -49,6 +49,8 @@ public:
     int getCoins();
     int getBoxes();
 
+    void setBoxes(int boxes);
+
 private slots:
     void movePlayer();
     void jumpPlayer();
@@ -58,6 +60,7 @@ private slots:
 signals:
     void jumpFactorChanged(qreal);
     void playerMoved(int);
+    void statsChanged();
 
 private:
     const int velocity = 7;

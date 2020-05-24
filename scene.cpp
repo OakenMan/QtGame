@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QPointF>
 #include <QPainter>
+#include <QPushButton>
+#include <QGraphicsProxyWidget>
 
 #include "physicsengine.h"
 #include "rbodytype.h"
@@ -31,8 +33,6 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, par
     // "Vue" de la scene ---> 8000 de long et 720 de haut
     setSceneRect(0, 0, 8000, 720);
 
-    scroll->setValue(0);
-
     dead = false;
 
     // Gestion du son dans la scène
@@ -48,47 +48,72 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, par
     Interface *interface = new Interface(this, player, scroll);
 
     connect(player, &Player::playerMoved, interface, &Interface::moveInterface);
+    connect(player, &Player::statsChanged, interface, &Interface::updateHUD);
 }
 
+/**
+ * "Démarre" le timer gérant le mouvement des mobs
+ * TODO : démarrer l'IA au fur et à mesure que le joueur charge la map pour éviter les lags ?
+ */
 void Scene::startMobs()
 {
     QList<QGraphicsItem*> items = this->items(sceneRect());
     for(QGraphicsItem *item: items) {
-        RigidBody *rb = static_cast<RigidBody*>(item);
-        if(rb->type() == QGraphicsItem::UserType + 5) {
+        if(item->type() == QGraphicsItem::UserType + 5) {
             GenericMob *mob = static_cast<GenericMob*>(item);
             mob->hasAI(true);
         }
     }
 }
 
+/**
+ * Event déclanché à chaque mouvement de souris
+ * Change la position du curseur et refresh l'affichage à cet endroit
+ */
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    qDebug() << "mouse move";
+    QPointF pos = mouseEvent->scenePos();
+    cursor = QPointF(((int)pos.x() / 48) * 48, ((int)pos.y() / 48) * 48);
+    update(QRectF(cursor.x()-48, cursor.y()-48, 144, 144));
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
 /**
- * @brief Event déclanché à chaque clic de souris (actuellement utilisé pour placer des blocs, à supprimer plus tard)
+ * Event déclanché à chaque clic de souris
+ * Pose un bloc sur la map
  */
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    if(dead || player->getBoxes() == 0) {
+        return;
+    }
+
     if(event->button() == Qt::RightButton) {
         QPointF pos = event->scenePos();
         QPointF newPos(((int)pos.x() / 48) * 48, ((int)pos.y() / 48) * 48);
 
-        RigidBody *rb = new RigidBody();
+        RigidBody *rb = createRigidBody(tBoxEmpty);
         addItem(rb);
 
         rb->setPos(rb->mapFromScene(newPos));
-        rb->setFlags(QGraphicsItem::ItemIsMovable);
+
+        player->setBoxes(player->getBoxes() - 1);
+        update(scroll->value(), 0, 1280, 100);
     }
+
     QGraphicsScene::mousePressEvent(event);
 }
 
+/**
+ * Récupère uniquement les events du clavier pour gérer les déplacements du joueurs
+ */
 bool Scene::eventFilter(QObject *watched, QEvent *event)
 {
     Q_UNUSED(watched);
+
+    if(dead) {
+        return false;
+    }
 
     // Si une touche est pressée
     if(event->type() == QEvent::KeyPress) {
@@ -97,17 +122,12 @@ bool Scene::eventFilter(QObject *watched, QEvent *event)
         }
         int key = ((QKeyEvent*)event)->key();
         switch(key) {
-        case Qt::Key_D:                     // Droite
-            player->addDirection(1);
-            break;
-        case Qt::Key_Q:                     // Gauche
-            player->addDirection(-1);
-            break;
-        case Qt::Key_Space:                 // Saut
-            player->jump();
-            break;
+        case Qt::Key_D:         player->addDirection(1);    break;  // Droite
+        case Qt::Key_Q:         player->addDirection(-1);   break;  // Gauche
+        case Qt::Key_Space:     player->jump();             break;  // Saut
         }
     }
+
     // Si une touche est relachée, on stop le mouvement
     else if(event->type() == QEvent::KeyRelease) {
         if(((QKeyEvent*)event)->isAutoRepeat()) {
@@ -115,66 +135,140 @@ bool Scene::eventFilter(QObject *watched, QEvent *event)
         }
         int key = ((QKeyEvent*)event)->key();
         switch(key) {
-        case Qt::Key_D:
-            player->addDirection(-1);
-            break;
-        case Qt::Key_Q:
-            player->addDirection(1);
-            break;
+        case Qt::Key_D:         player->addDirection(-1);   break;
+        case Qt::Key_Q:         player->addDirection(1);    break;
         }
     }
+
     return false;
 }
 
+/**
+ * Dessine le HUD
+ * TODO: charger les pixmaps à l'avance pour économiser du temps de calcul
+ */
 void Scene::drawForeground(QPainter *painter, const QRectF &rect)
 {
     Q_UNUSED(rect);
 
-    if(dead) {
-        setForegroundBrush(QColor(0, 0, 0, 127));
-        return;
-    }
-
     int v = scroll->value();
 
-    QPixmap heart(":/hud/ressources/HUD/hud_heartFull.png");
-    QPixmap heartEmpty(":/hud/ressources/HUD/hud_heartEmpty.png");
-
-    if(player->getHealth() == 0) {
-        painter->drawPixmap(v+10, 20, heartEmpty);
-        painter->drawPixmap(v+70, 20, heartEmpty);
-        painter->drawPixmap(v+130, 20, heartEmpty);
+    // Affichage du filtre coloré si le joueur est mort
+    if(dead) {
+//        QBrush brush(QColor(0, 0, 0));
+//        painter->setBrush(brush);
+//        painter->setOpacity(0.5f);
+//        painter->drawRect(sceneRect());
+        return;
     }
-    if(player->getHealth() == 1) {
-        painter->drawPixmap(v+10, 20, heart);
-        painter->drawPixmap(v+70, 20, heartEmpty);
-        painter->drawPixmap(v+130, 20, heartEmpty);
+    else {
+        QPixmap heart(":/hud/ressources/HUD/hud_heartFull.png");
+        QPixmap heartEmpty(":/hud/ressources/HUD/hud_heartEmpty.png");
+        QPixmap coin(":/hud/ressources/HUD/hud_coins.png");
+        QPixmap box(":/tiles/ressources/Tiles/box.png");
+
+        QPixmap zero(":/hud/ressources/HUD/hud_0.png");
+        QPixmap one(":/hud/ressources/HUD/hud_1.png");
+        QPixmap two(":/hud/ressources/HUD/hud_2.png");
+        QPixmap three(":/hud/ressources/HUD/hud_3.png");
+        QPixmap four(":/hud/ressources/HUD/hud_4.png");
+        QPixmap five(":/hud/ressources/HUD/hud_5.png");
+        QPixmap six(":/hud/ressources/HUD/hud_6.png");
+        QPixmap seven(":/hud/ressources/HUD/hud_7.png");
+        QPixmap height(":/hud/ressources/HUD/hud_8.png");
+        QPixmap nine(":/hud/ressources/HUD/hud_9.png");
+
+        // Affichage de la vie du joueur
+        if(player->getHealth() == 0) {
+            painter->drawPixmap(v+10, 20, heartEmpty);
+            painter->drawPixmap(v+70, 20, heartEmpty);
+            painter->drawPixmap(v+130, 20, heartEmpty);
+        }
+        if(player->getHealth() == 1) {
+            painter->drawPixmap(v+10, 20, heart);
+            painter->drawPixmap(v+70, 20, heartEmpty);
+            painter->drawPixmap(v+130, 20, heartEmpty);
+        }
+        else if(player->getHealth() == 2) {
+            painter->drawPixmap(v+10, 20, heart);
+            painter->drawPixmap(v+70, 20, heart);
+            painter->drawPixmap(v+130, 20, heartEmpty);
+        }
+        else if(player->getHealth() == 3) {
+            painter->drawPixmap(v+10, 20, heart);
+            painter->drawPixmap(v+70, 20, heart);
+            painter->drawPixmap(v+130, 20, heart);
+        }
+
+        // Affichage du nombre de pièces
+        painter->drawPixmap(v+1140, 20, 47, 47, coin);
+
+        int dizaines = (int)(player->getCoins()/10);
+        switch(dizaines) {
+        case 0: painter->drawPixmap(v+1200, 25, 28, 38, zero); break;
+        case 1: painter->drawPixmap(v+1200, 25, 28, 38, one); break;
+        case 2: painter->drawPixmap(v+1200, 25, 28, 38, two); break;
+        case 3: painter->drawPixmap(v+1200, 25, 28, 38, three); break;
+        case 4: painter->drawPixmap(v+1200, 25, 28, 38, four); break;
+        case 5: painter->drawPixmap(v+1200, 25, 28, 38, five); break;
+        case 6: painter->drawPixmap(v+1200, 25, 28, 38, six); break;
+        case 7: painter->drawPixmap(v+1200, 25, 28, 38, seven); break;
+        case 8: painter->drawPixmap(v+1200, 25, 28, 38, height); break;
+        case 9: painter->drawPixmap(v+1200, 25, 28, 38, nine); break;
+        }
+        switch (player->getCoins() - dizaines*10) {
+        case 0: painter->drawPixmap(v+1235, 25, 28, 38, zero); break;
+        case 1: painter->drawPixmap(v+1235, 25, 28, 38, one); break;
+        case 2: painter->drawPixmap(v+1235, 25, 28, 38, two); break;
+        case 3: painter->drawPixmap(v+1235, 25, 28, 38, three); break;
+        case 4: painter->drawPixmap(v+1235, 25, 28, 38, four); break;
+        case 5: painter->drawPixmap(v+1235, 25, 28, 38, five); break;
+        case 6: painter->drawPixmap(v+1235, 25, 28, 38, six); break;
+        case 7: painter->drawPixmap(v+1235, 25, 28, 38, seven); break;
+        case 8: painter->drawPixmap(v+1235, 25, 28, 38, height); break;
+        case 9: painter->drawPixmap(v+1235, 25, 28, 38, nine); break;
+        }
+
+        // Affichage du nombre de caisses
+        painter->drawPixmap(v+1005, 20, 47, 47, box);
+
+        dizaines = (int)(player->getBoxes()/10);
+        switch(dizaines) {
+        case 0: painter->drawPixmap(v+1065, 25, 28, 38, zero); break;
+        case 1: painter->drawPixmap(v+1065, 25, 28, 38, one); break;
+        case 2: painter->drawPixmap(v+1065, 25, 28, 38, two); break;
+        case 3: painter->drawPixmap(v+1065, 25, 28, 38, three); break;
+        case 4: painter->drawPixmap(v+1065, 25, 28, 38, four); break;
+        case 5: painter->drawPixmap(v+1065, 25, 28, 38, five); break;
+        case 6: painter->drawPixmap(v+1065, 25, 28, 38, six); break;
+        case 7: painter->drawPixmap(v+1065, 25, 28, 38, seven); break;
+        case 8: painter->drawPixmap(v+1065, 25, 28, 38, height); break;
+        case 9: painter->drawPixmap(v+1065, 25, 28, 38, nine); break;
+        }
+        switch (player->getBoxes() - dizaines*10) {
+        case 0: painter->drawPixmap(v+1100, 25, 28, 38, zero); break;
+        case 1: painter->drawPixmap(v+1100, 25, 28, 38, one); break;
+        case 2: painter->drawPixmap(v+1100, 25, 28, 38, two); break;
+        case 3: painter->drawPixmap(v+1100, 25, 28, 38, three); break;
+        case 4: painter->drawPixmap(v+1100, 25, 28, 38, four); break;
+        case 5: painter->drawPixmap(v+1100, 25, 28, 38, five); break;
+        case 6: painter->drawPixmap(v+1100, 25, 28, 38, six); break;
+        case 7: painter->drawPixmap(v+1100, 25, 28, 38, seven); break;
+        case 8: painter->drawPixmap(v+1100, 25, 28, 38, height); break;
+        case 9: painter->drawPixmap(v+1100, 25, 28, 38, nine); break;
+        }
+
+        // Affichage le curseur
+        if(player->getBoxes() > 0) {
+            painter->setOpacity(0.2f);
+            painter->drawPixmap(cursor.x(), cursor.y(), 48, 48, box);
+        }
     }
-    else if(player->getHealth() == 2) {
-        painter->drawPixmap(v+10, 20, heart);
-        painter->drawPixmap(v+70, 20, heart);
-        painter->drawPixmap(v+130, 20, heartEmpty);
-    }
-    else if(player->getHealth() == 3) {
-        painter->drawPixmap(v+10, 20, heart);
-        painter->drawPixmap(v+70, 20, heart);
-        painter->drawPixmap(v+130, 20, heart);
-    }
-
-    QPixmap coin(":/hud/ressources/HUD/hud_coins.png");
-    painter->drawPixmap(v+1140, 20, 47, 47, coin);
-
-    QPixmap zero(":/hud/ressources/HUD/hud_0.png");
-    painter->drawPixmap(v+1200, 25, 28, 38, zero);
-    painter->drawPixmap(v+1235, 25, 28, 38, zero);
-
-    QPixmap box(":/tiles/ressources/Tiles/box.png");
-    painter->drawPixmap(v+1005, 20, 47, 47, box);
-
-    painter->drawPixmap(v+1065, 25, 28, 38, zero);
-    painter->drawPixmap(v+1100, 25, 28, 38, zero);
 }
 
+/**
+ * Fonction appelée à la mort du joueur
+ */
 void Scene::gameover()
 {
     if(dead) {
@@ -182,5 +276,14 @@ void Scene::gameover()
     }
     dead = true;
     delete player;
+
     SoundManager::playSound(sGameover);
+
+    QPushButton *btn = new QPushButton("Try again");
+    btn->setGeometry(0, 0, 200, 50);
+    QGraphicsProxyWidget *widget = addWidget(btn);
+
+    widget->setPos(scroll->value()+540, 360);
+
+    update(sceneRect());
 }

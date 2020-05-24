@@ -103,27 +103,6 @@ bool PhysicsEngine::canMoveUp(Entity *entity)
  */
 bool PhysicsEngine::canMoveDown(Entity *entity)
 {
-//    QRectF entityRect = entity->mapRectToScene(entity->boundingRect());
-
-//    QList<QGraphicsItem*> items = entity->collidingItems();
-
-//    qDebug() << "in canMoveDown : " << items.isEmpty();
-
-//    for(QGraphicsItem *item : items) {
-//        RigidBody* rb = qgraphicsitem_cast<RigidBody*>(item);
-//        if(rb->isSolid()) {
-//            QRectF itemRect = rb->mapRectToScene(rb->boundingRect());
-//            // Si le bas du joueur est au dessus du haut de la plateforme
-//            if(entityRect.bottom() <= itemRect.top()+24) {
-//                // Si la plateforme est au dessus du joueur (et pas sur les côtés)
-//                if(itemRect.center().x() >= entityRect.left() && itemRect.center().x() <= entityRect.right()) {
-//                    return false;
-//                }
-//            }
-//        }
-//    }
-
-//    return true;
     QRectF entityRect = entity->mapRectToScene(entity->boundingRect());
 
     QRectF blockBottom(entityRect.left(), entityRect.bottom(), 48, 48);
@@ -131,18 +110,10 @@ bool PhysicsEngine::canMoveDown(Entity *entity)
     QList<QGraphicsItem*> items = scene->items(blockBottom);
 
     for(QGraphicsItem *item : items) {
-            RigidBody* rb = qgraphicsitem_cast<RigidBody*>(item);
-            if(rb->isSolid()) {
-//                QRectF itemRect = rb->mapRectToScene(rb->boundingRect());
-//                // Si le bas du joueur est au dessus du haut de la plateforme
-//                if(entityRect.bottom() <= itemRect.top()+24) {
-//                    // Si la plateforme est au dessus du joueur (et pas sur les côtés)
-//                    if(itemRect.center().x() >= entityRect.left() && itemRect.center().x() <= entityRect.right()) {
-//                        return false;
-//                    }
-//                }
-                return false;
-            }
+        RigidBody* rb = qgraphicsitem_cast<RigidBody*>(item);
+        if(rb->isSolid()) {
+            return false;
         }
+    }
     return true;
 }

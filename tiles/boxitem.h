@@ -5,8 +5,13 @@
 
 class BoxItem: public Tile
 {
+    Q_OBJECT
+
 public:
     BoxItem();
+
+public slots:
+    void breakBox();
 };
 
 #endif // BOXITEM_H

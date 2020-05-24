@@ -1,6 +1,8 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
+#include <QPainter>
+
 #include "scene.h"
 #include "player.h"
 
@@ -16,9 +18,9 @@ public slots:
     void moveInterface(int dx);
 
 private:
-    static QScrollBar *scroll;
-    static Scene *scene;
-    static Player *player;
+    QScrollBar *scroll;
+    Scene *scene;
+    Player *player;
 };
 
 #endif // INTERFACE_H

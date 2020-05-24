@@ -9,7 +9,7 @@ Box::Box():Tile()
 
 void Box::breakBox()
 {
-//    delete this;
-    pixmap = QPixmap(":/tiles/ressources/Tiles/boxEmpty.png");
-    update(boundingRect());
+    delete this;
+//    pixmap = QPixmap(":/tiles/ressources/Tiles/boxEmpty.png");
+//    update(boundingRect());
 }
