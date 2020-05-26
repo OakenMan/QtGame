@@ -50,8 +50,7 @@ void MainWindow::on_actionLoad_map_triggered()
     QByteArray loadData = loadFile.readAll();
 
     QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
-
-    loadMap(loadDoc, scene);
+    Serialization::loadMap(loadDoc, scene);
 
     scene->startMobs();
 

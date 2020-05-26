@@ -168,6 +168,7 @@ void Player::walk() {
 }
 
 void Player::fall() {
+    fallTimer->start();
     state = Falling;
     pixmap = hurtPixmap;
 }
@@ -258,7 +259,6 @@ void Player::movePlayer() {
         if(!(lastPlatform && isTouchingPlatform(lastPlatform)) && jumpAnimation->state() == QAbstractAnimation::Stopped) {
             if(lastPlatform) {
                 // Alors il tombe
-                fallTimer->start();
                 fall();
             }
         }
@@ -309,7 +309,6 @@ void Player::jumpPlayer() {
         // Avec la tête ---> on le fait tomber
         if(isTouchingHead(item)) {
             jumpAnimation->stop();
-            fallTimer->start();
             fall();
             return;
         }
@@ -341,7 +340,6 @@ void Player::jumpPlayer() {
                 }
                 if(pos().y() < groundLevel) {
                     fall();
-                    fallTimer->start();
                     return;
                 }
             }
@@ -443,7 +441,6 @@ void Player::checkCollisions()
         // Si c'est un mob
         else if(rb->type() == UserType + 5) {
             // Mais qu'on lui saute dessus
-            //            if(boundingRect().bottom() <= rb->boundingRect().top() + 24) {
             if(isTouchingFoot(rb)) {
                 delete rb;
             }
@@ -451,6 +448,9 @@ void Player::checkCollisions()
             else {
                 delete rb;
                 health--;
+                if(health == 0) {
+                    die();
+                }
                 emit statsChanged();
             }
         }

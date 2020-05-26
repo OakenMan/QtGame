@@ -5,10 +5,12 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QGraphicsProxyWidget>
+#include <QJsonDocument>
 
 #include "physicsengine.h"
 #include "rbodytype.h"
 #include "interface.h"
+#include "serialization.h"
 
 #include "entities/genericmob.h"
 #include "entities/coingold.h"
@@ -17,38 +19,22 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, par
 {
     scroll = s;
 
-    // Placement d'un bloc au sol sous le joueur
-    RigidBody *rb1 = new RigidBody();
-    addItem(rb1);
-    rb1->setPos(0, 672);
-    RigidBody *rb2 = new RigidBody();
-    addItem(rb2);
-    rb2->setPos(48, 672);
+    levels.append("://maps/level1.json");
+    currentLevel = 0;
 
-    player = new Player();
-    addItem(player);
-    player->setLastPlatform(rb1);
-    player->setPos(25, 672 - player->boundingRect().height());
+    startGame();
 
     // "Vue" de la scene ---> 8000 de long et 720 de haut
     setSceneRect(0, 0, 8000, 720);
 
-    dead = false;
+    // Moteur physique
+    new PhysicsEngine(this);
 
-    // Gestion du son dans la scène
+    // Gestion du son
     new SoundManager();
 
-    // Moteur physique instancié avec la scène
-    PhysicsEngine* engine = new PhysicsEngine(this);
-    Q_UNUSED(engine)
-
+    // Gestion des inputs clavier
     this->installEventFilter(this);
-
-    // Gestion de l'interface
-    Interface *interface = new Interface(this, player, scroll);
-
-    connect(player, &Player::playerMoved, interface, &Interface::moveInterface);
-    connect(player, &Player::statsChanged, interface, &Interface::updateHUD);
 }
 
 /**
@@ -64,6 +50,35 @@ void Scene::startMobs()
             mob->hasAI(true);
         }
     }
+}
+
+void Scene::loadMap(QString path)
+{
+    // On reset le niveau actuel
+    QList<QGraphicsItem*> list = items(sceneRect());
+    for(QGraphicsItem *item : list) {
+        qDebug() << "delete " << item;
+        delete item;
+    }
+
+    QFile loadFile(path);
+
+    if(!loadFile.open(QIODevice::ReadOnly)) {
+        qDebug() << "IMPOSSIBLE D'OUVRIR LE LEVEL " << path;
+        exit(0);
+    }
+
+    QByteArray loadData = loadFile.readAll();
+
+    QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
+
+    Serialization::loadMap(loadDoc, this);
+
+    loadFile.close();
+
+    startMobs();
+
+    QTimer::singleShot(10, this, SLOT(moveScrollbar()));
 }
 
 /**
@@ -84,12 +99,19 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
  */
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    // Si le joueur est mort ou qu'il n'a pas de boites
     if(dead || player->getBoxes() == 0) {
         return;
     }
 
     if(event->button() == Qt::RightButton) {
         QPointF pos = event->scenePos();
+
+        // Si il y a déjà des objets à cet endroit
+        if(!(items(pos).isEmpty())) {
+            return;
+        }
+
         QPointF newPos(((int)pos.x() / 48) * 48, ((int)pos.y() / 48) * 48);
 
         RigidBody *rb = createRigidBody(tBoxEmpty);
@@ -98,7 +120,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         rb->setPos(rb->mapFromScene(newPos));
 
         player->setBoxes(player->getBoxes() - 1);
-        update(scroll->value(), 0, 1280, 100);
+        update(scroll->value(), 0, 1280, 100);      // On update le HUD
     }
 
     QGraphicsScene::mousePressEvent(event);
@@ -153,7 +175,7 @@ void Scene::drawForeground(QPainter *painter, const QRectF &rect)
 
     int v = scroll->value();
 
-    // Affichage du filtre coloré si le joueur est mort
+    // Affichage du foreground si le joueur est mort
     if(dead) {
 //        QBrush brush(QColor(0, 0, 0));
 //        painter->setBrush(brush);
@@ -258,7 +280,7 @@ void Scene::drawForeground(QPainter *painter, const QRectF &rect)
         case 9: painter->drawPixmap(v+1100, 25, 28, 38, nine); break;
         }
 
-        // Affichage le curseur
+        // Affichage du curseur
         if(player->getBoxes() > 0) {
             painter->setOpacity(0.2f);
             painter->drawPixmap(cursor.x(), cursor.y(), 48, 48, box);
@@ -279,11 +301,39 @@ void Scene::gameover()
 
     SoundManager::playSound(sGameover);
 
-    QPushButton *btn = new QPushButton("Try again");
-    btn->setGeometry(0, 0, 200, 50);
-    QGraphicsProxyWidget *widget = addWidget(btn);
+//    QPushButton *btn = new QPushButton("Try again");
+//    btn->setGeometry(0, 0, 200, 50);
+//    QGraphicsProxyWidget *widget = addWidget(btn);
 
-    widget->setPos(scroll->value()+540, 360);
+//    widget->setPos(scroll->value()+540, 360);
+
+//    connect(btn, &QPushButton::clicked, this, &Scene::startGame);
 
     update(sceneRect());
+
+    QTimer::singleShot(1000, this, SLOT(startGame()));
+}
+
+void Scene::startGame()
+{
+    dead = false;
+
+    // Chargement du level
+    loadMap(levels.at(currentLevel));
+
+    // Création du joueur
+    player = new Player();
+    addItem(player);
+    player->setPos(25, 600);
+    player->fall();
+
+    // Gestion de l'interface
+    Interface *interface = new Interface(this, player, scroll);
+    connect(player, &Player::playerMoved, interface, &Interface::moveInterface);
+    connect(player, &Player::statsChanged, interface, &Interface::updateHUD);
+}
+
+void Scene::moveScrollbar()
+{
+    scroll->setValue(0);
 }

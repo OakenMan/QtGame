@@ -627,7 +627,7 @@
       <x>1290</x>
       <y>80</y>
       <width>211</width>
-      <height>151</height>
+      <height>91</height>
      </rect>
     </property>
     <property name="title">
@@ -639,7 +639,7 @@
        <x>0</x>
        <y>20</y>
        <width>211</width>
-       <height>131</height>
+       <height>71</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
@@ -666,41 +666,6 @@
         <property name="icon">
          <iconset resource="ressources.qrc">
           <normaloff>:/items/ressources/Items/coinBronze.png</normaloff>:/items/ressources/Items/coinBronze.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="iKeyBtn">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="ressources.qrc">
-          <normaloff>:/items/ressources/Items/keyYellow.png</normaloff>:/items/ressources/Items/keyYellow.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -780,62 +745,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="defaultTileBtn_19">
-        <property name="minimumSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="defaultTileBtn_20">
-        <property name="minimumSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </widget>
@@ -843,7 +752,7 @@
     <property name="geometry">
      <rect>
       <x>1290</x>
-      <y>240</y>
+      <y>180</y>
       <width>211</width>
       <height>151</height>
      </rect>
@@ -999,9 +908,9 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QPushButton" name="ePockerBtn">
+       <widget class="QPushButton" name="ePokerBtn">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="minimumSize">
          <size>
@@ -1075,9 +984,9 @@
     <property name="geometry">
      <rect>
       <x>1290</x>
-      <y>400</y>
+      <y>340</y>
       <width>211</width>
-      <height>211</height>
+      <height>271</height>
      </rect>
     </property>
     <property name="title">
@@ -1089,12 +998,12 @@
        <x>0</x>
        <y>20</y>
        <width>211</width>
-       <height>191</height>
+       <height>261</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="1">
-       <widget class="QPushButton" name="dSignLeftBtn">
+      <item row="0" column="2">
+       <widget class="QPushButton" name="dSignRightBtn">
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -1112,7 +1021,7 @@
         </property>
         <property name="icon">
          <iconset resource="ressources.qrc">
-          <normaloff>:/tiles/ressources/Tiles/signLeft.png</normaloff>:/tiles/ressources/Tiles/signLeft.png</iconset>
+          <normaloff>:/tiles/ressources/Tiles/signRight.png</normaloff>:/tiles/ressources/Tiles/signRight.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -1157,6 +1066,38 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="dCactusBtn">
+        <property name="minimumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="ressources.qrc">
+          <normaloff>:/items/ressources/Items/cactus.png</normaloff>:/items/ressources/Items/cactus.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="0">
        <widget class="QPushButton" name="dBushBtn">
         <property name="minimumSize">
@@ -1189,38 +1130,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="QPushButton" name="dSignRightBtn">
-        <property name="minimumSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="ressources.qrc">
-          <normaloff>:/tiles/ressources/Tiles/signRight.png</normaloff>:/tiles/ressources/Tiles/signRight.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="1">
        <widget class="QPushButton" name="dSnowhillBtn">
         <property name="minimumSize">
@@ -1241,38 +1150,6 @@
         <property name="icon">
          <iconset resource="ressources.qrc">
           <normaloff>:/items/ressources/Items/snowhill.png</normaloff>:/items/ressources/Items/snowhill.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QPushButton" name="dSignExitBtn">
-        <property name="minimumSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>48</width>
-          <height>48</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="ressources.qrc">
-          <normaloff>:/tiles/ressources/Tiles/signExit.png</normaloff>:/tiles/ressources/Tiles/signExit.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -1349,8 +1226,8 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <widget class="QPushButton" name="dCactusBtn">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="dSignExitBtn">
         <property name="minimumSize">
          <size>
           <width>48</width>
@@ -1368,7 +1245,133 @@
         </property>
         <property name="icon">
          <iconset resource="ressources.qrc">
-          <normaloff>:/items/ressources/Items/cactus.png</normaloff>:/items/ressources/Items/cactus.png</iconset>
+          <normaloff>:/tiles/ressources/Tiles/signExit.png</normaloff>:/tiles/ressources/Tiles/signExit.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="dSignLeftBtn">
+        <property name="minimumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="ressources.qrc">
+          <normaloff>:/tiles/ressources/Tiles/signLeft.png</normaloff>:/tiles/ressources/Tiles/signLeft.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QPushButton" name="dCloudBtn">
+        <property name="minimumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="ressources.qrc">
+          <normaloff>:/items/ressources/Items/cloud1.png</normaloff>:/items/ressources/Items/cloud1.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="dBushBtn_3">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="dBushBtn_4">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>48</width>
+          <height>48</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
         </property>
         <property name="iconSize">
          <size>

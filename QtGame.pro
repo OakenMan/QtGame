@@ -66,7 +66,9 @@ SOURCES += \
     entities/genericmob.cpp \
     entities/slime.cpp \
     rigidbody.cpp \
-    interface.cpp
+    interface.cpp \
+    entities/poker.cpp \
+    tiles/cloud.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -111,7 +113,9 @@ HEADERS += \
     physicsengine.h \
     entities/genericmob.h \
     entities/slime.h \
-    interface.h
+    interface.h \
+    entities/poker.h \
+    tiles/cloud.h
 
 FORMS += \
         mainwindow.ui \
@@ -119,7 +123,8 @@ FORMS += \
     launcher.ui
 
 RESOURCES += \
-    ressources.qrc
+    ressources.qrc \
+    maps.qrc
 
 DISTFILES += \
     TODO

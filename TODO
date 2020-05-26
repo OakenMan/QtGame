@@ -1,7 +1,7 @@
 BUGS :
-- le joueur transpèrce les plateformes quand il saute
-- le joueur se TP à une plateforme collée à lui quand il saute
-- le joueur traverse les plateformes après un saut
+- le joueur transperce certaines plateformes en sautant (?)
+- les pokers dépassent un peu du sol
+- la serialisation place mal les slimes
 
 
 

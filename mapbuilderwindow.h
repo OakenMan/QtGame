@@ -82,6 +82,10 @@ private slots:
 
     void on_eSlimeBtn_clicked();
 
+    void on_ePokerBtn_clicked();
+
+    void on_dCloudBtn_clicked();
+
 private:
     Ui::MapBuilderWindow *ui;
     MapBuilder *scene;

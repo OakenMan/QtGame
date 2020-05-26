@@ -25,6 +25,8 @@ public:
     explicit Scene(QScrollBar *s, QObject *parent=nullptr);
     void startMobs();
 
+    void loadMap(QString path);
+
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -34,12 +36,17 @@ protected:
 
 public slots:
     void gameover();
+    void startGame();
+    void moveScrollbar();
 
 private:
     Player * player;
     QScrollBar *scroll;
     QPointF cursor;
     bool dead;
+
+    int currentLevel;
+    QStringList levels;
 };
 
 #endif // SCENE_H

@@ -6,7 +6,13 @@
 
 #include "mapbuilder.h"
 
-void loadMap(const QJsonDocument loadData, QGraphicsScene *scene);
-QJsonDocument saveMap(MapBuilder *scene);
+class Serialization: public QObject
+{
+    Q_OBJECT
+
+public:
+    static void loadMap(const QJsonDocument loadData, QGraphicsScene *scene);
+    static QJsonDocument saveMap(MapBuilder *scene);
+};
 
 #endif // SERIALIZATION_H

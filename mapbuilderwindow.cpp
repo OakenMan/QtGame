@@ -53,7 +53,7 @@ void MapBuilderWindow::on_actionSauvegarder_le_niveau_triggered()
         return;
     }
 
-    QJsonDocument saveDoc = saveMap(scene);
+    QJsonDocument saveDoc = Serialization::saveMap(scene);
 
     saveFile.write(saveDoc.toJson(QJsonDocument::Compact));
 }
@@ -76,7 +76,7 @@ void MapBuilderWindow::on_actionCharger_un_niveau_triggered()
 
     QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
 
-    loadMap(loadDoc, scene);
+    Serialization::loadMap(loadDoc, scene);
 }
 
 /**
@@ -258,4 +258,16 @@ void MapBuilderWindow::on_eSlimeBtn_clicked()
 {
     scene->setCurrentBlock(eSlime);
     ui->currentRBDisplay->setIcon(ui->eSlimeBtn->icon());
+}
+
+void MapBuilderWindow::on_ePokerBtn_clicked()
+{
+    scene->setCurrentBlock(ePoker);
+    ui->currentRBDisplay->setIcon(ui->ePokerBtn->icon());
+}
+
+void MapBuilderWindow::on_dCloudBtn_clicked()
+{
+    scene->setCurrentBlock(dCloud);
+    ui->currentRBDisplay->setIcon(ui->dCloudBtn->icon());
 }

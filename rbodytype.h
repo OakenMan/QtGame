@@ -35,6 +35,7 @@ enum RBodyType {
     dPlantPurple,
     dPlant,
     dCactus,
+    dCloud,
 };
 
 #endif // RBODYTYPE_H

@@ -24,17 +24,17 @@
 #include "tiles/plant.h"
 #include "tiles/snowhill.h"
 #include "tiles/purpleplant.h"
+#include "tiles/cloud.h"
 
 #include "entities/coinbronze.h"
 #include "entities/coinsilver.h"
 #include "entities/coingold.h"
 #include "entities/slime.h"
+#include "entities/poker.h"
 
 RigidBody::RigidBody():QGraphicsObject()
 {
     solid = true;
-
-    pixmap = QPixmap(":/tiles/ressources/Tiles/box.png");
 }
 
 QRectF RigidBody::boundingRect() const
@@ -88,7 +88,9 @@ RigidBody *createRigidBody(RBodyType type)
     case dPlant:            return new Plant();
     case dPlantPurple:      return new PurplePlant();
     case dCactus:           return new Cactus();
+    case dCloud:            return new Cloud();
     case eSlime:            return new Slime();
+    case ePoker:            return new Poker();
     default:                return nullptr;
     }
 }

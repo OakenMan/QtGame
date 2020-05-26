@@ -1,7 +1,5 @@
 #include "slime.h"
 
-#include <QDebug>
-
 #include "physicsengine.h"
 
 Slime::Slime():GenericMob()

@@ -109,6 +109,9 @@ void MapBuilder::placeBlock(QPointF pos)
 
     addItem(rb);
 
+    if(rb->getType() == ePoker) {
+        newPos.setY(newPos.y() + 96);
+    }
     rb->setPos(rb->mapFromScene(newPos));
 
     update(QRectF(newPos.x()-144, newPos.y()-144, 288, 288));
