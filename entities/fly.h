@@ -1,12 +1,12 @@
-#ifndef SLIME_H
-#define SLIME_H
+#ifndef FLY_H
+#define FLY_H
 
 #include "genericmob.h"
 
-class Slime: public GenericMob
+class Fly: public GenericMob
 {
 public:
-    Slime();
+    Fly();
 
     QRectF boundingRect() const;
 
@@ -15,12 +15,13 @@ protected slots:
     void updatePixmap();
 
 private:
-    QPixmap walk1;
-    QPixmap walk2;
+    QPixmap fly1;
+    QPixmap fly2;
     QPixmap dead;
 
     int direction;
+    int dist;
     int currentFrame;
 };
 
-#endif // SLIME_H
+#endif // FLY_H

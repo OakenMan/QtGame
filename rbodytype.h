@@ -1,6 +1,10 @@
 #ifndef RBODYTYPE_H
 #define RBODYTYPE_H
 
+/**
+ * Liste de tous les RigidBody
+ * [!] Attention à ne pas changer l'ordre sinon ça défonce toutes les maps déjà faites :(
+ */
 enum RBodyType {
     pGrassPlatform,
     pSandPlatform,
@@ -36,6 +40,8 @@ enum RBodyType {
     dPlant,
     dCactus,
     dCloud,
+    eFly,
+    ePlayer,
 };
 
 #endif // RBODYTYPE_H

@@ -57,7 +57,7 @@ void Poker::hasAI(bool b)
 void Poker::move()
 {
     if(outside) {
-        if(currentHeight < 130) {
+        if(currentHeight < 130 && PhysicsEngine::canMoveUp(this)) {
             moveBy(0, -10);
             currentHeight += 10;
         }

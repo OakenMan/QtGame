@@ -19,6 +19,7 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 5000, 720, par
 {
     scroll = s;
 
+    levels.append("/home/tom/qt-workspace/build-QtGame-Desktop-Debug/saves/slimeTest2.json");
     levels.append("://maps/level1.json");
     levels.append("://maps/level2.json");
     levels.append("://maps/level3.json");

@@ -68,7 +68,9 @@ SOURCES += \
     rigidbody.cpp \
     interface.cpp \
     entities/poker.cpp \
-    tiles/cloud.cpp
+    tiles/cloud.cpp \
+    entities/fly.cpp \
+    entities/snail.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -115,7 +117,9 @@ HEADERS += \
     entities/slime.h \
     interface.h \
     entities/poker.h \
-    tiles/cloud.h
+    tiles/cloud.h \
+    entities/fly.h \
+    entities/snail.h
 
 FORMS += \
         mainwindow.ui \

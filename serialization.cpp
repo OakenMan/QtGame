@@ -27,14 +27,16 @@ void Serialization::loadMap(const QJsonDocument loadData, QGraphicsScene *scene)
 
         RigidBody *rb = createRigidBody(type);
 
-        newPos.setY(newPos.y() + 48 - rb->boundingRect().height());
+        if(rb != nullptr) {
+            newPos.setY(newPos.y() + 48 - rb->boundingRect().height());
 
-        scene->addItem(rb);
+            scene->addItem(rb);
 
-        if(rb->getType() == ePoker) {
-            newPos.setY(newPos.y() + 144);
+            if(rb->getType() == ePoker) {
+                newPos.setY(newPos.y() + 144);
+            }
+            rb->setPos(rb->mapFromScene(newPos));
         }
-        rb->setPos(rb->mapFromScene(newPos));
 
         scene->setBackgroundBrush(QBrush(QPixmap(background)));
     }

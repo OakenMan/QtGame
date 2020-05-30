@@ -12,7 +12,8 @@ Slime::Slime():GenericMob()
 
     pixmap = walk1;
 
-    direction = 1;
+    direction = -1;
+    currentFrame = 0;
     setTransformOriginPoint(boundingRect().center());
 
     connect(moveTimer, &QTimer::timeout, this, &Slime::move);
@@ -28,6 +29,7 @@ void Slime::move()
     if(direction == 1) {
         if(PhysicsEngine::canMoveRight(this, true)) {
             this->moveBy(3, 0);
+            updatePixmap();
         }
         else {
             direction = -1;
@@ -37,10 +39,23 @@ void Slime::move()
     else if(direction == -1) {
         if(PhysicsEngine::canMoveLeft(this, true)) {
             this->moveBy(-3, 0);
+            updatePixmap();
         }
         else {
             direction = 1;
             setTransform(QTransform(-1, 0, 0, 1, boundingRect().width(), 0));
         }
+    }
+}
+
+void Slime::updatePixmap()
+{
+    currentFrame++;
+    if(currentFrame == 5) {
+        pixmap = walk1;
+    }
+    if(currentFrame == 10) {
+        pixmap = walk2;
+        currentFrame = 0;
     }
 }

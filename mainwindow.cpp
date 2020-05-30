@@ -8,6 +8,7 @@
 #include <QDebug>
 
 #include "serialization.h"
+#include "rigidbody.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -29,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->statusBar->hide();
     ui->mainToolBar->hide();
-//    ui->menuBar->hide();      // à décommenter pour la version finale
+    //    ui->menuBar->hide();      // à décommenter pour la version finale
 
     ui->graphicsView->setMouseTracking(true);
 }
@@ -48,6 +49,12 @@ void MainWindow::on_actionLoad_map_triggered()
     if(!loadFile.open(QIODevice::ReadOnly)) {
         QMessageBox::warning(this, "Warning", "Cannot open file: " + loadFile.errorString());
         return;
+    }
+
+    // On reset le niveau actuel
+    QList<QGraphicsItem*> list = scene->items(scene->sceneRect());
+    for(QGraphicsItem *item : list) {
+        delete item;
     }
 
     QByteArray loadData = loadFile.readAll();

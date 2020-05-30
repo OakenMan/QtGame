@@ -86,6 +86,10 @@ private slots:
 
     void on_dCloudBtn_clicked();
 
+    void on_eFlyBtn_clicked();
+
+    void on_eSnailBtn_clicked();
+
 private:
     Ui::MapBuilderWindow *ui;
     MapBuilder *scene;

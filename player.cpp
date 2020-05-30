@@ -11,12 +11,15 @@
 #include "soundmanager.h"
 #include "interface.h"
 #include "scene.h"
+#include "entities/snail.h"
 
 /**
  * Constructeur
  */
 Player::Player():Entity()
 {
+    bodyType = ePlayer;
+
     setFlags(QGraphicsItem::ItemClipsToShape);
     setFlags(QGraphicsItem::ItemIsFocusable);   // Pour recevoir les input clavier
 
@@ -453,15 +456,22 @@ void Player::checkCollisions()
         else if(rb->type() == UserType + 5) {
             // Mais qu'on lui saute dessus
             if(isTouchingFoot(rb)) {
+                // Si c'est un escargot en coquille, le joueur pert de la vie
+                if(rb->getType() == eSnail) {
+                    Snail *s = qgraphicsitem_cast<Snail*>(rb);
+                    if(s->isInShell()) {
+                        health--;
+                        if(health == 0) { die(); }
+                        emit statsChanged();
+                    }
+                }
                 delete rb;
             }
             // Sinon
             else {
                 delete rb;
                 health--;
-                if(health == 0) {
-                    die();
-                }
+                if(health == 0) { die(); }
                 emit statsChanged();
             }
         }

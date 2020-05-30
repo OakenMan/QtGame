@@ -31,6 +31,8 @@
 #include "entities/coingold.h"
 #include "entities/slime.h"
 #include "entities/poker.h"
+#include "entities/fly.h"
+#include "entities/snail.h"
 
 RigidBody::RigidBody():QGraphicsObject()
 {
@@ -91,6 +93,8 @@ RigidBody *createRigidBody(RBodyType type)
     case dCloud:            return new Cloud();
     case eSlime:            return new Slime();
     case ePoker:            return new Poker();
+    case eFly:              return new Fly();
+    case eSnail:            return new Snail();
     default:                return nullptr;
     }
 }

@@ -254,6 +254,12 @@ void MapBuilderWindow::on_dCactusBtn_clicked()
     ui->currentRBDisplay->setIcon(ui->dCactusBtn->icon());
 }
 
+void MapBuilderWindow::on_dCloudBtn_clicked()
+{
+    scene->setCurrentBlock(dCloud);
+    ui->currentRBDisplay->setIcon(ui->dCloudBtn->icon());
+}
+
 void MapBuilderWindow::on_eSlimeBtn_clicked()
 {
     scene->setCurrentBlock(eSlime);
@@ -266,8 +272,14 @@ void MapBuilderWindow::on_ePokerBtn_clicked()
     ui->currentRBDisplay->setIcon(ui->ePokerBtn->icon());
 }
 
-void MapBuilderWindow::on_dCloudBtn_clicked()
+void MapBuilderWindow::on_eFlyBtn_clicked()
 {
-    scene->setCurrentBlock(dCloud);
-    ui->currentRBDisplay->setIcon(ui->dCloudBtn->icon());
+    scene->setCurrentBlock(eFly);
+    ui->currentRBDisplay->setIcon(ui->eFlyBtn->icon());
+}
+
+void MapBuilderWindow::on_eSnailBtn_clicked()
+{
+    scene->setCurrentBlock(eSnail);
+    ui->currentRBDisplay->setIcon(ui->eSnailBtn->icon());
 }
