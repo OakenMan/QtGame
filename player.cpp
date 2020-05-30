@@ -86,7 +86,9 @@ Player::Player():Entity()
  */
 Player::~Player()
 {
-
+    jumpAnimation->stop();
+    moveTimer->stop();
+    fallTimer->stop();
 }
 
 /*===== SURCHARGES DE MÉTHODES HÉRITÉES =====*/
@@ -392,6 +394,11 @@ void Player::fallPlayer() {
 }
 
 void Player::checkTimer() {
+
+    if(dead) {
+        return;
+    }
+
     // Si il ne bouge pas, on arrête le timer
     if(direction == 0) {
         moveTimer->stop();
@@ -447,6 +454,20 @@ void Player::checkCollisions()
             emit statsChanged();
         }
 
+        // Si c'est un champignon
+        else if(type == iMushroom) {
+            delete rb;
+            if(health < 3) { health++; }
+            emit statsChanged();
+        }
+
+        // Si c'est une boite (l'item)
+        else if(type == iBoxProps) {
+            delete rb;
+            boxes++;
+            emit statsChanged();
+        }
+
         // Si c'est de l'eau ou de la lave
         else if(type == tWater || type == tLava) {
             die();
@@ -475,6 +496,7 @@ void Player::checkCollisions()
                 emit statsChanged();
             }
         }
+        // Si c'est une boite à casser
         else if(type == tBox) {
             if(isTouchingHead(rb) && jumpAnimation->state() != QAbstractAnimation::Stopped) {
                 QTimer::singleShot(100, rb, SLOT(breakBox()));
@@ -482,6 +504,8 @@ void Player::checkCollisions()
                 emit statsChanged();
             }
         }
+
+        // Si c'est une boite à pièces ou à items;
         else if(type == tBoxItem || type == tBoxCoin) {
             if(isTouchingHead(rb) && jumpAnimation->state() != QAbstractAnimation::Stopped) {
                 QTimer::singleShot(100, rb, SLOT(breakBox()));
@@ -495,7 +519,9 @@ void Player::die()
     if(dead) {
         return;
     }
+    moveTimer->stop();
     dead = true;
+
     pixmap = hurtPixmap;
     QTimer::singleShot(500, Qt::PreciseTimer, this->scene(), SLOT(gameover()));
 }

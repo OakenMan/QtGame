@@ -12,6 +12,9 @@ public:
 
 public slots:
     void breakBox();
+
+private:
+    bool empty;
 };
 
 #endif // BOXITEM_H

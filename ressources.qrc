@@ -521,7 +521,6 @@
         <file>ressources/Map/mapTile_003.png</file>
         <file>ressources/Map/mapTile_002.png</file>
         <file>ressources/Map/mapTile_001.png</file>
-        <file>ressources/Map/title.png</file>
     </qresource>
     <qresource prefix="/sounds">
         <file>ressources/Sounds/powerup.wav</file>
@@ -530,6 +529,8 @@
         <file>ressources/Sounds/gameOver.wav</file>
         <file>ressources/Sounds/coin2.wav</file>
         <file>ressources/Sounds/music.mp3</file>
-        <file>ressources/Map/title.png</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file>ressources/Fonts/ChickenPie.ttf</file>
     </qresource>
 </RCC>

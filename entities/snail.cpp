@@ -11,6 +11,8 @@ Snail::Snail()
     shell = QPixmap(":/enemies/ressources/Enemies/snailShell.png");
     dead = QPixmap(":/enemies/ressources/Enemies/snailShell_upsidedown.png");
 
+    pixmap = walk1;
+
     direction = -1;
     currentFrame = 0;
     setTransformOriginPoint(boundingRect().center());

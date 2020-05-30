@@ -21,7 +21,7 @@ class Scene : public QGraphicsScene
 
 public:
     explicit Scene(QScrollBar *s, QObject *parent=nullptr);
-    void startMobs();
+    void startMobs(bool b);
 
     void loadMap(QString path);
 

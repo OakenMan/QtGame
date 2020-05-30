@@ -70,7 +70,9 @@ SOURCES += \
     entities/poker.cpp \
     tiles/cloud.cpp \
     entities/fly.cpp \
-    entities/snail.cpp
+    entities/snail.cpp \
+    entities/mushroom.cpp \
+    entities/boxprops.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -119,7 +121,9 @@ HEADERS += \
     entities/poker.h \
     tiles/cloud.h \
     entities/fly.h \
-    entities/snail.h
+    entities/snail.h \
+    entities/mushroom.h \
+    entities/boxprops.h
 
 FORMS += \
         mainwindow.ui \

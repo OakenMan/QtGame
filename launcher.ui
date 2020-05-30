@@ -566,56 +566,6 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <item row="2" column="1">
-     <widget class="QLabel" name="label_23">
-      <property name="minimumSize">
-       <size>
-        <width>64</width>
-        <height>64</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>64</width>
-        <height>64</height>
-       </size>
-      </property>
-      <property name="lineWidth">
-       <number>0</number>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="4">
-     <widget class="QLabel" name="label_24">
-      <property name="minimumSize">
-       <size>
-        <width>64</width>
-        <height>64</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>64</width>
-        <height>64</height>
-       </size>
-      </property>
-      <property name="lineWidth">
-       <number>0</number>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="pixmap">
-       <pixmap resource="ressources.qrc">:/map/ressources/Map/mapTile_127.png</pixmap>
-      </property>
-      <property name="buddy">
-       <cstring>mapEditorButton</cstring>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="3">
      <widget class="QLabel" name="label_31">
       <property name="minimumSize">
@@ -638,56 +588,6 @@
       </property>
       <property name="pixmap">
        <pixmap resource="ressources.qrc">:/map/ressources/Map/mapTile_161.png</pixmap>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <widget class="QLabel" name="label_30">
-      <property name="minimumSize">
-       <size>
-        <width>64</width>
-        <height>64</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>64</width>
-        <height>64</height>
-       </size>
-      </property>
-      <property name="lineWidth">
-       <number>0</number>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="pixmap">
-       <pixmap resource="ressources.qrc">:/map/ressources/Map/mapTile_127.png</pixmap>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="4">
-     <widget class="QLabel" name="label_35">
-      <property name="minimumSize">
-       <size>
-        <width>64</width>
-        <height>64</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>64</width>
-        <height>64</height>
-       </size>
-      </property>
-      <property name="lineWidth">
-       <number>0</number>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="pixmap">
-       <pixmap resource="ressources.qrc">:/map/ressources/Map/mapTile_054.png</pixmap>
       </property>
      </widget>
     </item>
@@ -716,8 +616,8 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_25">
+    <item row="1" column="4">
+     <widget class="QLabel" name="label_24">
       <property name="minimumSize">
        <size>
         <width>64</width>
@@ -737,10 +637,10 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap resource="ressources.qrc">:/map/ressources/Map/mapTile_054.png</pixmap>
+       <pixmap resource="ressources.qrc">:/map/ressources/Map/mapTile_127.png</pixmap>
       </property>
       <property name="buddy">
-       <cstring>gameButton</cstring>
+       <cstring>mapEditorButton</cstring>
       </property>
      </widget>
     </item>
@@ -791,6 +691,106 @@
       </property>
       <property name="buddy">
        <cstring>gameButton</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLabel" name="label_23">
+      <property name="minimumSize">
+       <size>
+        <width>64</width>
+        <height>64</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>64</width>
+        <height>64</height>
+       </size>
+      </property>
+      <property name="lineWidth">
+       <number>0</number>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_25">
+      <property name="minimumSize">
+       <size>
+        <width>64</width>
+        <height>64</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>64</width>
+        <height>64</height>
+       </size>
+      </property>
+      <property name="lineWidth">
+       <number>0</number>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="ressources.qrc">:/map/ressources/Map/mapTile_054.png</pixmap>
+      </property>
+      <property name="buddy">
+       <cstring>gameButton</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4">
+     <widget class="QLabel" name="label_35">
+      <property name="minimumSize">
+       <size>
+        <width>64</width>
+        <height>64</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>64</width>
+        <height>64</height>
+       </size>
+      </property>
+      <property name="lineWidth">
+       <number>0</number>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="ressources.qrc">:/map/ressources/Map/mapTile_054.png</pixmap>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QLabel" name="label_30">
+      <property name="minimumSize">
+       <size>
+        <width>64</width>
+        <height>64</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>64</width>
+        <height>64</height>
+       </size>
+      </property>
+      <property name="lineWidth">
+       <number>0</number>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="ressources.qrc">:/map/ressources/Map/mapTile_127.png</pixmap>
       </property>
      </widget>
     </item>
@@ -913,17 +913,17 @@
   <widget class="QLabel" name="labelGame">
    <property name="geometry">
     <rect>
-     <x>143</x>
-     <y>160</y>
-     <width>67</width>
-     <height>41</height>
+     <x>89</x>
+     <y>150</y>
+     <width>171</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="lineWidth">
     <number>0</number>
    </property>
    <property name="text">
-    <string>LAUNCH GAME</string>
+    <string>GAME</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -935,17 +935,17 @@
   <widget class="QLabel" name="labelMapEditor">
    <property name="geometry">
     <rect>
-     <x>363</x>
-     <y>160</y>
-     <width>91</width>
-     <height>41</height>
+     <x>283</x>
+     <y>150</y>
+     <width>251</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="lineWidth">
     <number>0</number>
    </property>
    <property name="text">
-    <string>LAUNCH MAP EDITOR</string>
+    <string>MAP EDITOR</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -954,7 +954,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_32">
+  <widget class="QLabel" name="labelPlayer">
    <property name="geometry">
     <rect>
      <x>260</x>

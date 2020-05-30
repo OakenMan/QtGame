@@ -62,7 +62,7 @@ void MainWindow::on_actionLoad_map_triggered()
     QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
     Serialization::loadMap(loadDoc, scene);
 
-    scene->startMobs();
+    scene->startMobs(true);
 
     ui->graphicsView->horizontalScrollBar()->setValue(0);
 }

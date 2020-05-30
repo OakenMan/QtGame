@@ -2,6 +2,7 @@
 #include "ui_launcher.h"
 
 #include <QDesktopWidget>
+#include <QFontDatabase>
 
 #include "mainwindow.h"
 #include "mapbuilderwindow.h"
@@ -17,6 +18,15 @@ Launcher::Launcher(QWidget *parent) :
 
     // On place le launcher au centre de l'écran
     move(QApplication::desktop()->screen()->rect().center() - rect().center());
+
+    int id = QFontDatabase::addApplicationFont(":/fonts/ressources/Fonts/ChickenPie.ttf");
+    QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+    QFont chickenPie(family);
+    chickenPie.setPixelSize(30);
+    ui->labelGame->setStyleSheet("QLabel { color : white; }");
+    ui->labelGame->setFont(chickenPie);
+    ui->labelMapEditor->setStyleSheet("QLabel { color : white; }");
+    ui->labelMapEditor->setFont(chickenPie);
 }
 
 Launcher::~Launcher()

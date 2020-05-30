@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QGraphicsProxyWidget>
 #include <QJsonDocument>
+#include <QFontDatabase>
 
 #include "physicsengine.h"
 #include "rbodytype.h"
@@ -19,8 +20,8 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 5000, 720, par
 {
     scroll = s;
 
-    levels.append("/home/tom/qt-workspace/build-QtGame-Desktop-Debug/saves/slimeTest2.json");
-    levels.append("://maps/level1.json");
+//    levels.append("/home/tom/qt-workspace/build-QtGame-Desktop-Debug/saves/global.json");
+//    levels.append("://maps/level1.json");
     levels.append("://maps/level2.json");
     levels.append("://maps/level3.json");
 
@@ -45,13 +46,13 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 5000, 720, par
  * "Démarre" le timer gérant le mouvement des mobs
  * TODO : démarrer l'IA au fur et à mesure que le joueur charge la map pour éviter les lags ?
  */
-void Scene::startMobs()
+void Scene::startMobs(bool b)
 {
     QList<QGraphicsItem*> items = this->items(sceneRect());
     for(QGraphicsItem *item: items) {
         if(item->type() == QGraphicsItem::UserType + 5) {
             GenericMob *mob = static_cast<GenericMob*>(item);
-            mob->hasAI(true);
+            mob->hasAI(b);
         }
     }
 }
@@ -79,7 +80,7 @@ void Scene::loadMap(QString path)
 
     loadFile.close();
 
-    startMobs();
+    startMobs(true);
 
     QTimer::singleShot(10, this, SLOT(moveScrollbar()));
 }
@@ -110,9 +111,13 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if(event->button() == Qt::RightButton) {
         QPointF pos = event->scenePos();
 
-        // Si il y a déjà des objets à cet endroit
-        if(!(items(pos).isEmpty())) {
-            return;
+        // Impossible de poser une caisse autre que dans l'air, l'eau ou la lave
+        QList<QGraphicsItem*> list = items(pos);
+        for(QGraphicsItem *item : list) {
+            RigidBody *rb = qgraphicsitem_cast<RigidBody*>(item);
+            if(rb->getType() != tWater && rb->getType() != tLava) {
+                return;
+            }
         }
 
         QPointF newPos(((int)pos.x() / 48) * 48, ((int)pos.y() / 48) * 48);
@@ -143,8 +148,8 @@ bool Scene::eventFilter(QObject *watched, QEvent *event)
         }
         int key = ((QKeyEvent*)event)->key();
         switch(key) {
-        case Qt::Key_D:         player->addDirection(1);    break;  // Droite
-        case Qt::Key_Q:         player->addDirection(-1);   break;  // Gauche
+        case Qt::Key_D:         if(!(dead || levelFinished)) player->addDirection(1);   break;  // Droite
+        case Qt::Key_Q:         if(!(dead || levelFinished)) player->addDirection(-1);   break;  // Gauche
         case Qt::Key_Space:     dead || levelFinished ? startGame() : player->jump();  break;  // Saut ou Try Again
         }
     }
@@ -156,8 +161,8 @@ bool Scene::eventFilter(QObject *watched, QEvent *event)
         }
         int key = ((QKeyEvent*)event)->key();
         switch(key) {
-        case Qt::Key_D:         player->addDirection(-1);   break;
-        case Qt::Key_Q:         player->addDirection(1);    break;
+        case Qt::Key_D:         if(!(dead || levelFinished)) player->addDirection(-1);   break;
+        case Qt::Key_Q:         if(!(dead || levelFinished)) player->addDirection(1);    break;
         }
     }
 
@@ -174,50 +179,49 @@ void Scene::drawForeground(QPainter *painter, const QRectF &rect)
 
     int v = scroll->value();
 
+    int id = QFontDatabase::addApplicationFont(":/fonts/ressources/Fonts/ChickenPie.ttf");
+    QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+    QFont chickenPie(family);
+    chickenPie.setPixelSize(48);
+
+    QPointF mid(v, 360);
+
     // Affichage du foreground si le joueur est mort
     if(dead) {
         // Filtre gris
-        QBrush brush(QColor(0, 0, 0));
+        QRadialGradient gradient(mid.x()+640, mid.y(), 1280);
+        gradient.setColorAt(0, QColor::fromRgbF(0, 0, 0, 0.9));
+        gradient.setColorAt(1, QColor::fromRgbF(0, 0, 0, 0.2));
+        QBrush brush(gradient);
         painter->setBrush(brush);
-        painter->setOpacity(0.5f);
         painter->drawRect(sceneRect());
 
-        QPointF mid(v, 360);
-
         // Texte "Game over"
-        QFont font = painter->font();
-        painter->setOpacity(1.0f);
-        font.setPixelSize(48);
-        painter->setFont(font);
-
+        chickenPie.setPixelSize(48);
+        painter->setPen(Qt::white);
+        painter->setFont(chickenPie);
         painter->drawText(QRect(mid.x(), mid.y()-60, 1280, 50), Qt::AlignCenter, "GAME OVER");
-
-        font.setPixelSize(36);
-        painter->setFont(font);
-
-        painter->drawText(QRect(mid.x(), mid.y(), 1280, 50), Qt::AlignCenter, "Press [SPACE] to try again!");
+        chickenPie.setPixelSize(36);
+        painter->setFont(chickenPie);
+        painter->drawText(QRect(mid.x(), mid.y(), 1280, 50), Qt::AlignCenter, "Press [ Space ] to try again!");
         return;
     }
     else if(levelFinished) {
         // Filtre gris
-        QBrush brush(QColor(0, 0, 0));
+        QRadialGradient gradient(mid.x()+640, mid.y(), 1280);
+        gradient.setColorAt(0, QColor::fromRgbF(0, 0, 0, 0.9));
+        gradient.setColorAt(1, QColor::fromRgbF(0, 0, 0, 0.2));
+        QBrush brush(gradient);
         painter->setBrush(brush);
-        painter->setOpacity(0.5f);
         painter->drawRect(sceneRect());
 
-        QPointF mid(v, 360);
-
         // Texte "Game over"
-        QFont font = painter->font();
-        painter->setOpacity(1.0f);
-        font.setPixelSize(48);
-        painter->setFont(font);
-
-        painter->drawText(QRect(mid.x(), mid.y()-60, 1280, 50), Qt::AlignCenter, "Level "+QString::number(currentLevel+1)+" finished!");
-
-        font.setPixelSize(36);
-        painter->setFont(font);
-
+        chickenPie.setPixelSize(48);
+        painter->setPen(Qt::white);
+        painter->setFont(chickenPie);
+        painter->drawText(QRect(mid.x(), mid.y()-60, 1280, 50), Qt::AlignCenter, "Level "+QString::number(currentLevel)+" finished!");
+        chickenPie.setPixelSize(36);
+        painter->setFont(chickenPie);
         painter->drawText(QRect(mid.x(), mid.y(), 1280, 50), Qt::AlignCenter, "Press [SPACE] to go to the next level!");
         return;
     }
@@ -336,11 +340,33 @@ void Scene::gameover()
     }
 
     dead = true;
+    removeItem(player);
     delete player;
+
+    startMobs(false);
 
     SoundManager::playSound(sGameover);
 
     update(sceneRect());
+}
+
+void Scene::levelComplete()
+{
+    if(levelFinished) {
+        return;
+    }
+
+    levelFinished = true;
+    delete player;
+    currentLevel++;
+
+    startMobs(false);
+
+    update(sceneRect());
+
+    if(currentLevel == 3) { // Si il a fini le jeu
+        // Credits
+    }
 }
 
 void Scene::startGame()
@@ -368,19 +394,4 @@ void Scene::moveScrollbar()
     scroll->setValue(0);
 }
 
-void Scene::levelComplete()
-{
-    if(levelFinished) {
-        return;
-    }
 
-    levelFinished = true;
-    delete player;
-    currentLevel++;
-
-    update(sceneRect());
-
-    if(currentLevel == 3) { // Si il a fini le jeu
-        // Credits
-    }
-}

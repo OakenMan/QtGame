@@ -42,6 +42,8 @@ enum RBodyType {
     dCloud,
     eFly,
     ePlayer,
+    iMushroom,
+    iBoxProps,
 };
 
 #endif // RBODYTYPE_H
