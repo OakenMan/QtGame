@@ -1,9 +1,6 @@
 #include "player.h"
 
-#include <QRectF>
 #include <QPainter>
-#include <QEvent>
-#include <QKeyEvent>
 
 #include <QDebug>
 
@@ -13,15 +10,14 @@
 #include "scene.h"
 #include "entities/snail.h"
 
-/**
- * Constructeur
- */
+
 Player::Player():Entity()
 {
     bodyType = ePlayer;
 
-    setFlags(QGraphicsItem::ItemClipsToShape);
-    setFlags(QGraphicsItem::ItemIsFocusable);   // Pour recevoir les input clavier
+    //### TO REMOVE IF NO BUGS NOTICED
+//    setFlags(QGraphicsItem::ItemClipsToShape);
+//    setFlags(QGraphicsItem::ItemIsFocusable);
 
     // Initialisation des pixmap
     standPixmap = QPixmap(":/player/ressources/Player/p1_stand.png");
@@ -45,14 +41,13 @@ Player::Player():Entity()
     setTransformOriginPoint(boundingRect().center());
 
     // Initialisation des variables
-    direction = 0;
     state = Standing;
+    direction = 0;
     walkFrame = 0;
-    dead = false;
-
     health = 3;
     coins = 0;
     boxes = 0;
+    dead = false;
 
     // Description de l'animation de saut
     jumpAnimation = new QPropertyAnimation(this);
@@ -64,16 +59,17 @@ Player::Player():Entity()
     jumpAnimation->setDuration(700);
     jumpAnimation->setEasingCurve(QEasingCurve::OutInQuad);
     connect(this, &Player::jumpFactorChanged, this, &Player::jumpPlayer);
+    connect(jumpAnimation, &QPropertyAnimation::finished, this, &Player::stand);
 
     // Timer pour le mouvement
     moveTimer = new QTimer(this);
     moveTimer->setTimerType(Qt::PreciseTimer);
-    moveTimer->setInterval(20); // <--- durée d'une frame en ms (donc fps ~= 1000/20 = 50)
+    moveTimer->setInterval(20); // durée d'une frame en ms (donc fps ~= 1000/20 = 50)
     connect(moveTimer, &QTimer::timeout, this, &Player::movePlayer);
 
     // Timer pour la chute
     fallTimer = new QTimer(this);
-    fallTimer->setInterval(20); // <--- durée d'une frame en ms
+    fallTimer->setInterval(20);
     fallTimer->setTimerType(Qt::PreciseTimer);
     connect(fallTimer, &QTimer::timeout, this, &Player::fallPlayer);
 
@@ -81,23 +77,25 @@ Player::Player():Entity()
     setZValue(1);
 }
 
-/**
- * Destructeur
- */
 Player::~Player()
 {
-    jumpAnimation->stop();
-    moveTimer->stop();
-    fallTimer->stop();
+    //### TO REMOVE IF NO BUGS NOTICED
+//    jumpAnimation->stop();
+//    moveTimer->stop();
+//    fallTimer->stop();
 }
 
 /*===== SURCHARGES DE MÉTHODES HÉRITÉES =====*/
 QRectF Player::boundingRect() const {
-    return QRectF(0, 0, DEFAULT_TILE_SIZE, 1.5*DEFAULT_TILE_SIZE);
+    return QRectF(0, 0, DEFAULT_TILE_SIZE, 1.5*DEFAULT_TILE_SIZE);  // Taille = 48 * 72
 }
 
+//@@@ TO REMOVE IN RELEASE (affichage des hitboxes)
 void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *options, QWidget *widget)
 {
+    Q_UNUSED(widget);
+    Q_UNUSED(options);
+
     painter->drawPixmap(boundingRect().toRect(), pixmap);
 
     //    QRectF head(7, 0, boundingRect().width()-14, 5);
@@ -119,16 +117,14 @@ void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *options, Q
     //    painter->drawRect(foot);
     //    painter->drawRect(body);
 
-    Q_UNUSED(widget);
-    Q_UNUSED(options);
 }
 
-/*===== NOUVELLES MÉTHODES (GETTERS, SETTERS...) =====*/
+/*===== GETTERS ET SETTERS =====*/
 int Player::getDirection() const {
     return direction;
 }
 
-void Player::addDirection(int newDirection) {
+void Player::addDirection(const int newDirection) {
     if(dead) {
         return;
     }
@@ -148,6 +144,52 @@ void Player::addDirection(int newDirection) {
     }
 }
 
+qreal Player::getJumpFactor() const
+{
+    return jumpFactor;
+}
+
+void Player::setJumpFactor(const qreal &newJumpFactor)
+{
+    if(jumpFactor == newJumpFactor) {
+        return;
+    }
+
+    jumpFactor = newJumpFactor;
+    emit jumpFactorChanged(jumpFactor);
+}
+
+void Player::setLastPlatform(QGraphicsItem *item)
+{
+    if(lastPlatform == item) {
+        return;
+    }
+
+    lastPlatform = item;
+}
+
+bool Player::isFalling() {
+    return state == Falling;
+}
+
+int Player::getHealth() {
+    return health;
+}
+
+int Player::getCoins() {
+    return coins;
+}
+
+int Player::getBoxes() {
+    return boxes;
+}
+
+void Player::setBoxes(int boxes)
+{
+    this->boxes = boxes;
+}
+
+/*===== PUBLIC SLOTS =====*/
 void Player::stand() {
     state = Standing;
     pixmap = standPixmap;
@@ -172,10 +214,8 @@ void Player::jump() {
 }
 
 void Player::walk() {
-    //    if(state == Walking) {
-    //        return;
-    //    }
-    //    state = Walking;
+    // Le changement des sprites est géré par "nextFrame()", ce slot
+    // ne sert donc plus à grand chose, mais on le garde si besoin
 }
 
 void Player::fall() {
@@ -184,78 +224,7 @@ void Player::fall() {
     pixmap = hurtPixmap;
 }
 
-bool Player::isFalling() {
-    return state == Falling;
-}
-
-/**
- * Change la frame d'animation de marche
- */
-void Player::nextFrame()
-{
-    if(state==Falling || state==Jumping) {
-        return;
-    }
-
-    walkFrame++;
-
-    if(walkFrame >= 12) {
-        walkFrame = 1;
-    }
-
-    switch(walkFrame) {
-    case 1: pixmap = walk1; break;
-    case 2: pixmap = walk2; break;
-    case 3: pixmap = walk3; break;
-    case 4: pixmap = walk4; break;
-    case 5: pixmap = walk5; break;
-    case 6: pixmap = walk6; break;
-    case 7: pixmap = walk7; break;
-    case 8: pixmap = walk8; break;
-    case 9: pixmap = walk9; break;
-    case 10: pixmap = walk10; break;
-    case 11: pixmap = walk11; break;
-    }
-}
-
-int Player::getHealth() {
-    return health;
-}
-
-int Player::getCoins() {
-    return coins;
-}
-
-int Player::getBoxes() {
-    return boxes;
-}
-
-void Player::setBoxes(int boxes)
-{
-    this->boxes = boxes;
-}
-
-/*===== GESTION DES DÉPLACEMENTS DU JOUEUR =====*/
-qreal Player::getJumpFactor() const
-{
-    return jumpFactor;
-}
-
-void Player::setJumpFactor(const qreal &newJumpFactor)
-{
-    if(jumpFactor == newJumpFactor) {
-        return;
-    }
-
-    jumpFactor = newJumpFactor;
-    emit jumpFactorChanged(jumpFactor);
-}
-
-void Player::setLastPlatform(QGraphicsItem *item)
-{
-    lastPlatform = item;
-}
-
+/*===== PRIVATE SLOTS =====*/
 void Player::movePlayer() {
 
     checkCollisions();
@@ -287,7 +256,7 @@ void Player::movePlayer() {
                 return;
             }
             dead = true;    // en vrai il est pas vraiment mort mais bon c'est pareil hein
-            QTimer::singleShot(500, Qt::PreciseTimer, this->scene(), SLOT(levelComplete()));
+            QTimer::singleShot(100, Qt::PreciseTimer, this->scene(), SLOT(levelComplete()));
             return;
         }
 
@@ -361,13 +330,13 @@ void Player::jumpPlayer() {
             }
         }
     }
-
     // On met à jour la position du joueur
     setPos(pos().x(), y);
 }
 
 void Player::fallPlayer() {
 
+    qDebug() << "fall";
     checkCollisions();
 
     // On met à jour la position du joueur
@@ -411,7 +380,34 @@ void Player::checkTimer() {
     }
 }
 
-/*===== DETECTION DES COLLISIONS (+ précis qu'avec le PhysicsEngine...) =====*/
+/*===== MÉTHODES PRIVÉES =====*/
+void Player::nextFrame()
+{
+    if(state==Falling || state==Jumping) {
+        return;
+    }
+
+    walkFrame++;
+
+    if(walkFrame >= 12) {
+        walkFrame = 1;
+    }
+
+    switch(walkFrame) {
+    case 1: pixmap = walk1; break;
+    case 2: pixmap = walk2; break;
+    case 3: pixmap = walk3; break;
+    case 4: pixmap = walk4; break;
+    case 5: pixmap = walk5; break;
+    case 6: pixmap = walk6; break;
+    case 7: pixmap = walk7; break;
+    case 8: pixmap = walk8; break;
+    case 9: pixmap = walk9; break;
+    case 10: pixmap = walk10; break;
+    case 11: pixmap = walk11; break;
+    }
+}
+
 RigidBody * Player::collidingPlatforms() {
     RigidBody *rb = nullptr;
 
@@ -434,7 +430,6 @@ RigidBody * Player::collidingPlatforms() {
             }
         }
     }
-
     return rb;
 }
 
@@ -458,6 +453,7 @@ void Player::checkCollisions()
         else if(type == iMushroom) {
             delete rb;
             if(health < 3) { health++; }
+            SoundManager::playSound(sHealthPickup);
             emit statsChanged();
         }
 
@@ -482,8 +478,9 @@ void Player::checkCollisions()
                     Snail *s = qgraphicsitem_cast<Snail*>(rb);
                     if(s->isInShell()) {
                         health--;
-                        if(health == 0) { die(); }
+                        SoundManager::playSound(sDamage);
                         emit statsChanged();
+                        if(health == 0) { die(); }
                     }
                 }
                 delete rb;
@@ -492,8 +489,9 @@ void Player::checkCollisions()
             else {
                 delete rb;
                 health--;
-                if(health == 0) { die(); }
+                SoundManager::playSound(sDamage);
                 emit statsChanged();
+                if(health == 0) { die(); }
             }
         }
         // Si c'est une boite à casser

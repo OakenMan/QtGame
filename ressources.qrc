@@ -529,6 +529,14 @@
         <file>ressources/Sounds/gameOver.wav</file>
         <file>ressources/Sounds/coin2.wav</file>
         <file>ressources/Sounds/music.mp3</file>
+        <file>ressources/Sounds/levelWin.wav</file>
+        <file>ressources/Sounds/levelWin2.wav</file>
+        <file>ressources/Sounds/nope.mp3</file>
+        <file>ressources/Sounds/sad-violin-airhorn.mp3</file>
+        <file>ressources/Sounds/wilhelm-scream.mp3</file>
+        <file>ressources/Sounds/oof.wav</file>
+        <file>ressources/Sounds/busted.wav</file>
+        <file>ressources/Sounds/lifePickup.wav</file>
     </qresource>
     <qresource prefix="/fonts">
         <file>ressources/Fonts/ChickenPie.ttf</file>

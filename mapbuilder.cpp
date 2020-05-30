@@ -128,7 +128,7 @@ void MapBuilder::deleteBlock(QPointF pos)
 
 void MapBuilder::placeGround()
 {
-    setCurrentBlock(pGrassPlatform);
+//    setCurrentBlock(pGrassPlatform);
     for(int i=0; i<5048; i+=48) {
         placeBlock(QPointF(i, 672));
     }

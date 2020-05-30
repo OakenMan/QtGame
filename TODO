@@ -1,19 +1,29 @@
 BUGS :
-- le sprite de chute reste quelques fois après être retombé au sol
 - on ne tombe pas tout le temps dans les trous de 1 blocs
 - on meurt de manière random en s'approchant de l'eau
 - le jeu rame putain
 - des inputs claviers restent bloqués, notament après le respawn
-- les itemBox ne s'update pas quand on les casse
-- la touche espace répond pas A CHAQUE FOIS PILE QUAND ON VA SAUTER AU DESSUS DE L'EAU C'EST SI FRUSTRA,T
-- les snowHill se transforment en bush à la serialisation (wtf?)
+- la touche espace répond pas A CHAQUE FOIS PILE QUAND ON VA SAUTER AU DESSUS DE L'EAU C'EST SI FRUSTRANT
+- le foreground de fin de niveau ne s'actualise pas directement (ou alors c'est juste très lent??)
+- le player "tombe" à chaque changement de bloc (pas trop gênant mais bon)
 
-GAMEPLAY :
+FIXED :
+- les itemBox ne s'update pas quand on les casse
+- les snowHill se transforment en bush à la serialisation (wtf?)
+- le HUD s'actualise pas bien après le respawn
+- le sprite de chute reste quelques fois après être retombé au sol
+
+TODO :
+- mode pour tester les levels dans l'editeur de jeu
+- chrono dans les levels pour faire du SPEEDRUN
+- scoreboard
+
+=== GAMEPLAY ============================
 - 3 niveaux (herbe, neige, donjon ?)
 - des pièces à ramasser (high score)
 - des boites qu'on peut poser pour faciliter le chemin
 - 3 vies
-    quand on touche un mon on pert 1 de vie
+    quand on touche un mob on pert 1 de vie
     quand on tombe dans l'eau/la lave/le vide on meurt
 - quand on meurt on recommence au début du niveau
 - mobs :
@@ -23,3 +33,4 @@ GAMEPLAY :
 - items :
     champignons (++vie)
     boites (++boites)
+=========================================

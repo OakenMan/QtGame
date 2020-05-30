@@ -9,7 +9,14 @@ enum SoundEffect {
     sCoin,
     sGameover,
     sPowerup,
+    sHealthPickup,
+    sBreakBox,
+    sLevelWin,
+    sMobDie,
+    sDamage,
     mLevel1,
+    mLevel2,
+    mLevel3,
 };
 
 #endif // SOUNDEFFECT_H

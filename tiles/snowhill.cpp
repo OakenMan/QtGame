@@ -2,7 +2,7 @@
 
 Snowhill::Snowhill():Tile()
 {
-    bodyType = dBush;
+    bodyType = dSnowhill;
 
     solid = false;
 

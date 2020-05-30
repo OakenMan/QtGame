@@ -21,7 +21,7 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 5000, 720, par
     scroll = s;
 
 //    levels.append("/home/tom/qt-workspace/build-QtGame-Desktop-Debug/saves/global.json");
-//    levels.append("://maps/level1.json");
+    levels.append("://maps/level1.json");
     levels.append("://maps/level2.json");
     levels.append("://maps/level3.json");
 
@@ -83,6 +83,7 @@ void Scene::loadMap(QString path)
     startMobs(true);
 
     QTimer::singleShot(10, this, SLOT(moveScrollbar()));
+
 }
 
 /**
@@ -219,7 +220,7 @@ void Scene::drawForeground(QPainter *painter, const QRectF &rect)
         chickenPie.setPixelSize(48);
         painter->setPen(Qt::white);
         painter->setFont(chickenPie);
-        painter->drawText(QRect(mid.x(), mid.y()-60, 1280, 50), Qt::AlignCenter, "Level "+QString::number(currentLevel)+" finished!");
+        painter->drawText(QRect(mid.x(), mid.y()-60, 1280, 50), Qt::AlignCenter, "LEVEL "+QString::number(currentLevel)+" FINISHED");
         chickenPie.setPixelSize(36);
         painter->setFont(chickenPie);
         painter->drawText(QRect(mid.x(), mid.y(), 1280, 50), Qt::AlignCenter, "Press [SPACE] to go to the next level!");
@@ -357,8 +358,11 @@ void Scene::levelComplete()
     }
 
     levelFinished = true;
+    removeItem(player);
     delete player;
     currentLevel++;
+
+    SoundManager::playSound(sLevelWin);
 
     startMobs(false);
 
@@ -392,6 +396,7 @@ void Scene::startGame()
 void Scene::moveScrollbar()
 {
     scroll->setValue(0);
+    update(sceneRect());
 }
 
 

@@ -31,7 +31,7 @@ void BoxItem::breakBox()
 
         pixmap = QPixmap(":/tiles/ressources/Tiles/boxItem_disabled.png");
 
-        update(QRectF(pos().x()-48, pos().y()-48, 144, 96));
+        update(boundingRect());
 
         empty = true;
     }

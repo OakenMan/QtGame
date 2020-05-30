@@ -32,9 +32,16 @@ private:
     static QSoundEffect *coin;
     static QSoundEffect *gameover;
     static QSoundEffect *powerup;
+    static QSoundEffect *healthPickup;
+    static QSoundEffect *mobDie;
+    static QSoundEffect *levelWin;
+    static QSoundEffect *breakBox;
+    static QSoundEffect *damage;
 
     // Musiques
-    static QMediaPlayer *music;
+    static QMediaPlayer *level1;
+    static QMediaPlayer *level2;
+    static QMediaPlayer *level3;
 
 //signals:
 //   void stopMusic();
