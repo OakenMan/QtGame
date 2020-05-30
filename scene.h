@@ -6,10 +6,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
 #include <QTimer>
-#include <QAbstractAnimation>
-#include <QPropertyAnimation>
-#include <QEasingCurve>
 #include <QScrollBar>
+#include <QPushButton>
 
 #include "player.h"
 #include "soundmanager.h"
@@ -38,15 +36,20 @@ public slots:
     void gameover();
     void startGame();
     void moveScrollbar();
+    void levelComplete();
 
 private:
     Player * player;
-    QScrollBar *scroll;
+
     QPointF cursor;
+
     bool dead;
+    bool levelFinished;
 
     int currentLevel;
     QStringList levels;
+
+    QScrollBar *scroll;
 };
 
 #endif // SCENE_H

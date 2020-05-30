@@ -124,6 +124,9 @@ int Player::getDirection() const {
 }
 
 void Player::addDirection(int newDirection) {
+    if(dead) {
+        return;
+    }
     if(direction == newDirection) {
         return;
     }
@@ -147,6 +150,9 @@ void Player::stand() {
 }
 
 void Player::jump() {
+    if(dead) {
+        return;
+    }
     if(fallTimer->isActive()) {     // On ne peut pas sauter si on tombe
         return;
     }
@@ -271,7 +277,12 @@ void Player::movePlayer() {
     // Si il va à droite
     if(direction > 0 && PhysicsEngine::canMoveRight(this, false)) {
 
-        if(pos().x() >= 8000) {
+        if(pos().x() >= 5000) {
+            if(dead) {
+                return;
+            }
+            dead = true;    // en vrai il est pas vraiment mort mais bon c'est pareil hein
+            QTimer::singleShot(500, Qt::PreciseTimer, this->scene(), SLOT(levelComplete()));
             return;
         }
 

@@ -15,17 +15,20 @@
 #include "entities/genericmob.h"
 #include "entities/coingold.h"
 
-Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, parent)
+Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 5000, 720, parent)
 {
     scroll = s;
 
     levels.append("://maps/level1.json");
+    levels.append("://maps/level2.json");
+    levels.append("://maps/level3.json");
+
     currentLevel = 0;
 
     startGame();
 
-    // "Vue" de la scene ---> 8000 de long et 720 de haut
-    setSceneRect(0, 0, 8000, 720);
+    // "Vue" de la scene ---> 5000 de long et 720 de haut
+    setSceneRect(0, 0, 5000, 720);
 
     // Moteur physique
     new PhysicsEngine(this);
@@ -57,7 +60,6 @@ void Scene::loadMap(QString path)
     // On reset le niveau actuel
     QList<QGraphicsItem*> list = items(sceneRect());
     for(QGraphicsItem *item : list) {
-        qDebug() << "delete " << item;
         delete item;
     }
 
@@ -133,10 +135,6 @@ bool Scene::eventFilter(QObject *watched, QEvent *event)
 {
     Q_UNUSED(watched);
 
-    if(dead) {
-        return false;
-    }
-
     // Si une touche est pressée
     if(event->type() == QEvent::KeyPress) {
         if(((QKeyEvent*)event)->isAutoRepeat()) {   // On ignore les event à part le tout premier
@@ -146,7 +144,7 @@ bool Scene::eventFilter(QObject *watched, QEvent *event)
         switch(key) {
         case Qt::Key_D:         player->addDirection(1);    break;  // Droite
         case Qt::Key_Q:         player->addDirection(-1);   break;  // Gauche
-        case Qt::Key_Space:     player->jump();             break;  // Saut
+        case Qt::Key_Space:     dead || levelFinished ? startGame() : player->jump();  break;  // Saut ou Try Again
         }
     }
 
@@ -167,7 +165,7 @@ bool Scene::eventFilter(QObject *watched, QEvent *event)
 
 /**
  * Dessine le HUD
- * TODO: charger les pixmaps à l'avance pour économiser du temps de calcul
+ * TODO: charger les pixmaps à l'avance pour économiser du temps de calcul ?
  */
 void Scene::drawForeground(QPainter *painter, const QRectF &rect)
 {
@@ -177,10 +175,49 @@ void Scene::drawForeground(QPainter *painter, const QRectF &rect)
 
     // Affichage du foreground si le joueur est mort
     if(dead) {
-//        QBrush brush(QColor(0, 0, 0));
-//        painter->setBrush(brush);
-//        painter->setOpacity(0.5f);
-//        painter->drawRect(sceneRect());
+        // Filtre gris
+        QBrush brush(QColor(0, 0, 0));
+        painter->setBrush(brush);
+        painter->setOpacity(0.5f);
+        painter->drawRect(sceneRect());
+
+        QPointF mid(v, 360);
+
+        // Texte "Game over"
+        QFont font = painter->font();
+        painter->setOpacity(1.0f);
+        font.setPixelSize(48);
+        painter->setFont(font);
+
+        painter->drawText(QRect(mid.x(), mid.y()-60, 1280, 50), Qt::AlignCenter, "GAME OVER");
+
+        font.setPixelSize(36);
+        painter->setFont(font);
+
+        painter->drawText(QRect(mid.x(), mid.y(), 1280, 50), Qt::AlignCenter, "Press [SPACE] to try again!");
+        return;
+    }
+    else if(levelFinished) {
+        // Filtre gris
+        QBrush brush(QColor(0, 0, 0));
+        painter->setBrush(brush);
+        painter->setOpacity(0.5f);
+        painter->drawRect(sceneRect());
+
+        QPointF mid(v, 360);
+
+        // Texte "Game over"
+        QFont font = painter->font();
+        painter->setOpacity(1.0f);
+        font.setPixelSize(48);
+        painter->setFont(font);
+
+        painter->drawText(QRect(mid.x(), mid.y()-60, 1280, 50), Qt::AlignCenter, "Level "+QString::number(currentLevel+1)+" finished!");
+
+        font.setPixelSize(36);
+        painter->setFont(font);
+
+        painter->drawText(QRect(mid.x(), mid.y(), 1280, 50), Qt::AlignCenter, "Press [SPACE] to go to the next level!");
         return;
     }
     else {
@@ -296,27 +333,19 @@ void Scene::gameover()
     if(dead) {
         return;
     }
+
     dead = true;
     delete player;
 
     SoundManager::playSound(sGameover);
 
-//    QPushButton *btn = new QPushButton("Try again");
-//    btn->setGeometry(0, 0, 200, 50);
-//    QGraphicsProxyWidget *widget = addWidget(btn);
-
-//    widget->setPos(scroll->value()+540, 360);
-
-//    connect(btn, &QPushButton::clicked, this, &Scene::startGame);
-
     update(sceneRect());
-
-    QTimer::singleShot(1000, this, SLOT(startGame()));
 }
 
 void Scene::startGame()
 {
     dead = false;
+    levelFinished = false;
 
     // Chargement du level
     loadMap(levels.at(currentLevel));
@@ -336,4 +365,21 @@ void Scene::startGame()
 void Scene::moveScrollbar()
 {
     scroll->setValue(0);
+}
+
+void Scene::levelComplete()
+{
+    if(levelFinished) {
+        return;
+    }
+
+    levelFinished = true;
+    delete player;
+    currentLevel++;
+
+    update(sceneRect());
+
+    if(currentLevel == 3) { // Si il a fini le jeu
+        // Credits
+    }
 }

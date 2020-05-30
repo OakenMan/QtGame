@@ -24,9 +24,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setFixedSize(QSize(1280, 720));
 
-    // On fait disparaitre les scrollbars
-//    ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    // On fait disparaitre les scrollbars et les bords de l'écran
+    ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->statusBar->hide();
+    ui->mainToolBar->hide();
+//    ui->menuBar->hide();      // à décommenter pour la version finale
 
     ui->graphicsView->setMouseTracking(true);
 }

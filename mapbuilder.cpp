@@ -33,11 +33,11 @@
 
 #include "player.h"
 
-MapBuilder::MapBuilder(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 8000, 720, parent)
+MapBuilder::MapBuilder(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 5000, 720, parent)
 {
     scroll = s;
 
-    setSceneRect(0, 0, 8000, 720);
+    setSceneRect(0, 0, 5000, 720);
 
     setCurrentBlock(pGrassPlatform);
 
@@ -129,8 +129,8 @@ void MapBuilder::deleteBlock(QPointF pos)
 void MapBuilder::placeGround()
 {
     setCurrentBlock(pGrassPlatform);
-    for(int i=0; i<8000/66; i++) {
-        placeBlock(QPointF(i*48, 672));
+    for(int i=0; i<5048; i+=48) {
+        placeBlock(QPointF(i, 672));
     }
 }
 
