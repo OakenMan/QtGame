@@ -13,10 +13,24 @@ FIXED :
 - le HUD s'actualise pas bien après le respawn
 - le sprite de chute reste quelques fois après être retombé au sol
 
+OPTI :
+- supprimer tout ce qui ne sert plus
+- ne pas afficher ce qui n'est pas visible
+
 TODO :
 - mode pour tester les levels dans l'editeur de jeu
 - chrono dans les levels pour faire du SPEEDRUN
 - scoreboard
+
+RELEASE :
+- enlever toutes les ressources non-utilisées pour gagner de la place
+- enlever tous les commentaires qui commencent par ### ou @@@
+
+LE GRAND NETTOYAGE :
+- player.cpp
+- player.h
+- scene.cpp
+- scene.h
 
 === GAMEPLAY ============================
 - 3 niveaux (herbe, neige, donjon ?)

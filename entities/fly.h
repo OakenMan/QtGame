@@ -15,13 +15,13 @@ protected slots:
     void updatePixmap();
 
 private:
-    QPixmap fly1;
-    QPixmap fly2;
-    QPixmap dead;
-
     int direction;
     int dist;
     int currentFrame;
+
+    QPixmap fly1;
+    QPixmap fly2;
+    QPixmap dead;
 };
 
 #endif // FLY_H

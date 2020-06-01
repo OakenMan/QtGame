@@ -14,7 +14,7 @@ public:
     explicit Interface(Scene *newScene, Player *newPlayer, QScrollBar *s);
 
 public slots:
-    void updateHUD();
+    void updateHUD(); 
     void moveInterface(int dx);
 
 private:

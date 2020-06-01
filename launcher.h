@@ -16,14 +16,9 @@ public:
     explicit Launcher(QWidget *parent = 0);
     ~Launcher();
 
-//protected:
-//    virtual void paintEvent(QPaintEvent *event);
-
 private slots:
     void on_pushButton_clicked();
-
     void on_gameButton_clicked();
-
     void on_mapEditorButton_clicked();
 
 private:

@@ -2,18 +2,13 @@
 #define SCENE_H
 
 #include <QGraphicsScene>
-#include <QGraphicsItem>
-#include <QGraphicsSceneMouseEvent>
-#include <QKeyEvent>
-#include <QTimer>
 #include <QScrollBar>
-#include <QPushButton>
 
 #include "player.h"
 #include "soundmanager.h"
 
 /**
- * @brief Scene principale
+ * La scène, là où tout se passe tmtc
  */
 class Scene : public QGraphicsScene
 {
@@ -21,35 +16,37 @@ class Scene : public QGraphicsScene
 
 public:
     explicit Scene(QScrollBar *s, QObject *parent=nullptr);
-    void startMobs(bool b);
 
+    void startMobs(bool b);
     void loadMap(QString path);
 
 protected:
+    /* SURCHARGES DES EVENTS */
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    bool eventFilter(QObject *watched, QEvent *event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    virtual void keyPressEvent(QKeyEvent *event);
+    virtual void keyReleaseEvent(QKeyEvent *event);
 
     void drawForeground(QPainter *painter, const QRectF &rect);
 
 public slots:
-    void gameover();
     void startGame();
-    void moveScrollbar();
+    void gameover();
     void levelComplete();
+    void moveScrollbar();
 
 private:
-    Player * player;
+    Player * player;        // Joueur
 
-    QPointF cursor;
+    QStringList levels;     // Liste des niveaux
+    int currentLevel;       // Id du niveau actuel
 
-    bool dead;
-    bool levelFinished;
+    QScrollBar *scroll;     // Scrollbar horizontale
+    QPointF cursor;         // Position du curseur
 
-    int currentLevel;
-    QStringList levels;
+    bool dead;              // Assez explicite
+    bool levelFinished;     // Idem
 
-    QScrollBar *scroll;
 };
 
 #endif // SCENE_H

@@ -15,12 +15,13 @@ protected slots:
     void updatePixmap();
 
 private:
+    int direction;
+    int currentFrame;
+
     QPixmap walk1;
     QPixmap walk2;
     QPixmap dead;
 
-    int direction;
-    int currentFrame;
 };
 
 #endif // SLIME_H

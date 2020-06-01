@@ -1,10 +1,8 @@
 #include "scene.h"
 
 #include <QDebug>
-#include <QPointF>
+
 #include <QPainter>
-#include <QPushButton>
-#include <QGraphicsProxyWidget>
 #include <QJsonDocument>
 #include <QFontDatabase>
 
@@ -14,13 +12,13 @@
 #include "serialization.h"
 
 #include "entities/genericmob.h"
-#include "entities/coingold.h"
 
 Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 5000, 720, parent)
 {
     scroll = s;
 
-//    levels.append("/home/tom/qt-workspace/build-QtGame-Desktop-Debug/saves/global.json");
+    // Liste des niveaux
+    //    levels.append("/home/tom/qt-workspace/build-QtGame-Desktop-Debug/saves/slimeTest2.json");
     levels.append("://maps/level1.json");
     levels.append("://maps/level2.json");
     levels.append("://maps/level3.json");
@@ -37,9 +35,6 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 5000, 720, par
 
     // Gestion du son
     new SoundManager();
-
-    // Gestion des inputs clavier
-    this->installEventFilter(this);
 }
 
 /**
@@ -104,8 +99,8 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
  */
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    // Si le joueur est mort ou qu'il n'a pas de boites
-    if(dead || player->getBoxes() == 0) {
+    // Si le joueur est mort, qu'il a fini le niveau ou qu'il n'a pas de boites
+    if(dead || levelFinished || player->getBoxes() == 0) {
         return;
     }
 
@@ -129,45 +124,44 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         rb->setPos(rb->mapFromScene(newPos));
 
         player->setBoxes(player->getBoxes() - 1);
-        update(scroll->value(), 0, 1280, 100);      // On update le HUD
+        update(scroll->value()+1065, 0, 70, 70);      // On update le HUD
     }
 
     QGraphicsScene::mousePressEvent(event);
 }
 
 /**
- * Récupère uniquement les events du clavier pour gérer les déplacements du joueurs
+ * Event déclanché à chaque pression de touche
+ * Gère les déplacements du joueur
  */
-bool Scene::eventFilter(QObject *watched, QEvent *event)
+void Scene::keyPressEvent(QKeyEvent *event)
 {
-    Q_UNUSED(watched);
-
-    // Si une touche est pressée
-    if(event->type() == QEvent::KeyPress) {
-        if(((QKeyEvent*)event)->isAutoRepeat()) {   // On ignore les event à part le tout premier
-            return false;
-        }
-        int key = ((QKeyEvent*)event)->key();
-        switch(key) {
-        case Qt::Key_D:         if(!(dead || levelFinished)) player->addDirection(1);   break;  // Droite
-        case Qt::Key_Q:         if(!(dead || levelFinished)) player->addDirection(-1);   break;  // Gauche
-        case Qt::Key_Space:     dead || levelFinished ? startGame() : player->jump();  break;  // Saut ou Try Again
-        }
+    if(event->isAutoRepeat()) {   // On ignore les event à part le tout premier
+        return;
     }
-
-    // Si une touche est relachée, on stop le mouvement
-    else if(event->type() == QEvent::KeyRelease) {
-        if(((QKeyEvent*)event)->isAutoRepeat()) {
-            return false;
-        }
-        int key = ((QKeyEvent*)event)->key();
-        switch(key) {
-        case Qt::Key_D:         if(!(dead || levelFinished)) player->addDirection(-1);   break;
-        case Qt::Key_Q:         if(!(dead || levelFinished)) player->addDirection(1);    break;
-        }
+    switch(event->key())
+    {
+    case Qt::Key_D:         if(!(dead || levelFinished)) player->addDirection(1);   break;  // Droite
+    case Qt::Key_Q:         if(!(dead || levelFinished)) player->addDirection(-1);  break;  // Gauche
+    case Qt::Key_Space:     dead || levelFinished ? startGame() : player->jump();   break;  // Saut ou Try Again
     }
+    QGraphicsScene::keyPressEvent(event);
+}
 
-    return false;
+/**
+ * Event déclanché à chaque relachement de touche
+ * Gère les déplacement du joueur
+ */
+void Scene::keyReleaseEvent(QKeyEvent *event)
+{
+    if(event->isAutoRepeat()) {
+        return;
+    }
+    switch(event->key()) {
+    case Qt::Key_D:         if(!(dead || levelFinished)) player->addDirection(-1);   break;
+    case Qt::Key_Q:         if(!(dead || levelFinished)) player->addDirection(1);    break;
+    }
+    QGraphicsScene::keyReleaseEvent(event);
 }
 
 /**
@@ -176,8 +170,6 @@ bool Scene::eventFilter(QObject *watched, QEvent *event)
  */
 void Scene::drawForeground(QPainter *painter, const QRectF &rect)
 {
-    Q_UNUSED(rect);
-
     int v = scroll->value();
 
     int id = QFontDatabase::addApplicationFont(":/fonts/ressources/Fonts/ChickenPie.ttf");
@@ -188,7 +180,8 @@ void Scene::drawForeground(QPainter *painter, const QRectF &rect)
     QPointF mid(v, 360);
 
     // Affichage du foreground si le joueur est mort
-    if(dead) {
+    if(dead)
+    {
         // Filtre gris
         QRadialGradient gradient(mid.x()+640, mid.y(), 1280);
         gradient.setColorAt(0, QColor::fromRgbF(0, 0, 0, 0.9));
@@ -207,7 +200,9 @@ void Scene::drawForeground(QPainter *painter, const QRectF &rect)
         painter->drawText(QRect(mid.x(), mid.y(), 1280, 50), Qt::AlignCenter, "Press [ Space ] to try again!");
         return;
     }
-    else if(levelFinished) {
+    // Affichage du foreground si le joueur a fini le niveau
+    else if(levelFinished)
+    {
         // Filtre gris
         QRadialGradient gradient(mid.x()+640, mid.y(), 1280);
         gradient.setColorAt(0, QColor::fromRgbF(0, 0, 0, 0.9));
@@ -226,107 +221,115 @@ void Scene::drawForeground(QPainter *painter, const QRectF &rect)
         painter->drawText(QRect(mid.x(), mid.y(), 1280, 50), Qt::AlignCenter, "Press [SPACE] to go to the next level!");
         return;
     }
-    else {
-        QPixmap heart(":/hud/ressources/HUD/hud_heartFull.png");
-        QPixmap heartEmpty(":/hud/ressources/HUD/hud_heartEmpty.png");
-        QPixmap coin(":/hud/ressources/HUD/hud_coins.png");
-        QPixmap box(":/tiles/ressources/Tiles/box.png");
-
-        QPixmap zero(":/hud/ressources/HUD/hud_0.png");
-        QPixmap one(":/hud/ressources/HUD/hud_1.png");
-        QPixmap two(":/hud/ressources/HUD/hud_2.png");
-        QPixmap three(":/hud/ressources/HUD/hud_3.png");
-        QPixmap four(":/hud/ressources/HUD/hud_4.png");
-        QPixmap five(":/hud/ressources/HUD/hud_5.png");
-        QPixmap six(":/hud/ressources/HUD/hud_6.png");
-        QPixmap seven(":/hud/ressources/HUD/hud_7.png");
-        QPixmap height(":/hud/ressources/HUD/hud_8.png");
-        QPixmap nine(":/hud/ressources/HUD/hud_9.png");
-
-        // Affichage de la vie du joueur
-        if(player->getHealth() == 0) {
-            painter->drawPixmap(v+10, 20, heartEmpty);
-            painter->drawPixmap(v+70, 20, heartEmpty);
-            painter->drawPixmap(v+130, 20, heartEmpty);
-        }
-        if(player->getHealth() == 1) {
-            painter->drawPixmap(v+10, 20, heart);
-            painter->drawPixmap(v+70, 20, heartEmpty);
-            painter->drawPixmap(v+130, 20, heartEmpty);
-        }
-        else if(player->getHealth() == 2) {
-            painter->drawPixmap(v+10, 20, heart);
-            painter->drawPixmap(v+70, 20, heart);
-            painter->drawPixmap(v+130, 20, heartEmpty);
-        }
-        else if(player->getHealth() == 3) {
-            painter->drawPixmap(v+10, 20, heart);
-            painter->drawPixmap(v+70, 20, heart);
-            painter->drawPixmap(v+130, 20, heart);
-        }
-
-        // Affichage du nombre de pièces
-        painter->drawPixmap(v+1140, 20, 47, 47, coin);
-
-        int dizaines = (int)(player->getCoins()/10);
-        switch(dizaines) {
-        case 0: painter->drawPixmap(v+1200, 25, 28, 38, zero); break;
-        case 1: painter->drawPixmap(v+1200, 25, 28, 38, one); break;
-        case 2: painter->drawPixmap(v+1200, 25, 28, 38, two); break;
-        case 3: painter->drawPixmap(v+1200, 25, 28, 38, three); break;
-        case 4: painter->drawPixmap(v+1200, 25, 28, 38, four); break;
-        case 5: painter->drawPixmap(v+1200, 25, 28, 38, five); break;
-        case 6: painter->drawPixmap(v+1200, 25, 28, 38, six); break;
-        case 7: painter->drawPixmap(v+1200, 25, 28, 38, seven); break;
-        case 8: painter->drawPixmap(v+1200, 25, 28, 38, height); break;
-        case 9: painter->drawPixmap(v+1200, 25, 28, 38, nine); break;
-        }
-        switch (player->getCoins() - dizaines*10) {
-        case 0: painter->drawPixmap(v+1235, 25, 28, 38, zero); break;
-        case 1: painter->drawPixmap(v+1235, 25, 28, 38, one); break;
-        case 2: painter->drawPixmap(v+1235, 25, 28, 38, two); break;
-        case 3: painter->drawPixmap(v+1235, 25, 28, 38, three); break;
-        case 4: painter->drawPixmap(v+1235, 25, 28, 38, four); break;
-        case 5: painter->drawPixmap(v+1235, 25, 28, 38, five); break;
-        case 6: painter->drawPixmap(v+1235, 25, 28, 38, six); break;
-        case 7: painter->drawPixmap(v+1235, 25, 28, 38, seven); break;
-        case 8: painter->drawPixmap(v+1235, 25, 28, 38, height); break;
-        case 9: painter->drawPixmap(v+1235, 25, 28, 38, nine); break;
-        }
-
-        // Affichage du nombre de caisses
-        painter->drawPixmap(v+1005, 20, 47, 47, box);
-
-        dizaines = (int)(player->getBoxes()/10);
-        switch(dizaines) {
-        case 0: painter->drawPixmap(v+1065, 25, 28, 38, zero); break;
-        case 1: painter->drawPixmap(v+1065, 25, 28, 38, one); break;
-        case 2: painter->drawPixmap(v+1065, 25, 28, 38, two); break;
-        case 3: painter->drawPixmap(v+1065, 25, 28, 38, three); break;
-        case 4: painter->drawPixmap(v+1065, 25, 28, 38, four); break;
-        case 5: painter->drawPixmap(v+1065, 25, 28, 38, five); break;
-        case 6: painter->drawPixmap(v+1065, 25, 28, 38, six); break;
-        case 7: painter->drawPixmap(v+1065, 25, 28, 38, seven); break;
-        case 8: painter->drawPixmap(v+1065, 25, 28, 38, height); break;
-        case 9: painter->drawPixmap(v+1065, 25, 28, 38, nine); break;
-        }
-        switch (player->getBoxes() - dizaines*10) {
-        case 0: painter->drawPixmap(v+1100, 25, 28, 38, zero); break;
-        case 1: painter->drawPixmap(v+1100, 25, 28, 38, one); break;
-        case 2: painter->drawPixmap(v+1100, 25, 28, 38, two); break;
-        case 3: painter->drawPixmap(v+1100, 25, 28, 38, three); break;
-        case 4: painter->drawPixmap(v+1100, 25, 28, 38, four); break;
-        case 5: painter->drawPixmap(v+1100, 25, 28, 38, five); break;
-        case 6: painter->drawPixmap(v+1100, 25, 28, 38, six); break;
-        case 7: painter->drawPixmap(v+1100, 25, 28, 38, seven); break;
-        case 8: painter->drawPixmap(v+1100, 25, 28, 38, height); break;
-        case 9: painter->drawPixmap(v+1100, 25, 28, 38, nine); break;
-        }
-
+    // Affichage du curseur et du HUD
+    else
+    {
         // Affichage du curseur
-        if(player->getBoxes() > 0) {
+        if(player->getBoxes() > 0)
+        {
+            QPixmap box(":/tiles/ressources/Tiles/box.png");
             painter->setOpacity(0.2f);
             painter->drawPixmap(cursor.x(), cursor.y(), 48, 48, box);
+        }
+        // Affichage du HUD
+        if(rect.top() <= 70)
+        {
+            painter->setOpacity(1.0f);
+            QPixmap heart(":/hud/ressources/HUD/hud_heartFull.png");
+            QPixmap heartEmpty(":/hud/ressources/HUD/hud_heartEmpty.png");
+            QPixmap coin(":/hud/ressources/HUD/hud_coins.png");
+            QPixmap box(":/tiles/ressources/Tiles/box.png");
+
+            QPixmap zero(":/hud/ressources/HUD/hud_0.png");
+            QPixmap one(":/hud/ressources/HUD/hud_1.png");
+            QPixmap two(":/hud/ressources/HUD/hud_2.png");
+            QPixmap three(":/hud/ressources/HUD/hud_3.png");
+            QPixmap four(":/hud/ressources/HUD/hud_4.png");
+            QPixmap five(":/hud/ressources/HUD/hud_5.png");
+            QPixmap six(":/hud/ressources/HUD/hud_6.png");
+            QPixmap seven(":/hud/ressources/HUD/hud_7.png");
+            QPixmap height(":/hud/ressources/HUD/hud_8.png");
+            QPixmap nine(":/hud/ressources/HUD/hud_9.png");
+
+            // Affichage de la vie du joueur
+            if(player->getHealth() == 0) {
+                painter->drawPixmap(v+10, 20, heartEmpty);
+                painter->drawPixmap(v+70, 20, heartEmpty);
+                painter->drawPixmap(v+130, 20, heartEmpty);
+            }
+            if(player->getHealth() == 1) {
+                painter->drawPixmap(v+10, 20, heart);
+                painter->drawPixmap(v+70, 20, heartEmpty);
+                painter->drawPixmap(v+130, 20, heartEmpty);
+            }
+            else if(player->getHealth() == 2) {
+                painter->drawPixmap(v+10, 20, heart);
+                painter->drawPixmap(v+70, 20, heart);
+                painter->drawPixmap(v+130, 20, heartEmpty);
+            }
+            else if(player->getHealth() == 3) {
+                painter->drawPixmap(v+10, 20, heart);
+                painter->drawPixmap(v+70, 20, heart);
+                painter->drawPixmap(v+130, 20, heart);
+            }
+
+            // Affichage du nombre de pièces
+            painter->drawPixmap(v+1140, 20, 47, 47, coin);
+
+            int dizaines = (int)(player->getCoins()/10);
+            switch(dizaines) {
+            case 0: painter->drawPixmap(v+1200, 25, 28, 38, zero); break;
+            case 1: painter->drawPixmap(v+1200, 25, 28, 38, one); break;
+            case 2: painter->drawPixmap(v+1200, 25, 28, 38, two); break;
+            case 3: painter->drawPixmap(v+1200, 25, 28, 38, three); break;
+            case 4: painter->drawPixmap(v+1200, 25, 28, 38, four); break;
+            case 5: painter->drawPixmap(v+1200, 25, 28, 38, five); break;
+            case 6: painter->drawPixmap(v+1200, 25, 28, 38, six); break;
+            case 7: painter->drawPixmap(v+1200, 25, 28, 38, seven); break;
+            case 8: painter->drawPixmap(v+1200, 25, 28, 38, height); break;
+            case 9: painter->drawPixmap(v+1200, 25, 28, 38, nine); break;
+            }
+            switch (player->getCoins() - dizaines*10) {
+            case 0: painter->drawPixmap(v+1235, 25, 28, 38, zero); break;
+            case 1: painter->drawPixmap(v+1235, 25, 28, 38, one); break;
+            case 2: painter->drawPixmap(v+1235, 25, 28, 38, two); break;
+            case 3: painter->drawPixmap(v+1235, 25, 28, 38, three); break;
+            case 4: painter->drawPixmap(v+1235, 25, 28, 38, four); break;
+            case 5: painter->drawPixmap(v+1235, 25, 28, 38, five); break;
+            case 6: painter->drawPixmap(v+1235, 25, 28, 38, six); break;
+            case 7: painter->drawPixmap(v+1235, 25, 28, 38, seven); break;
+            case 8: painter->drawPixmap(v+1235, 25, 28, 38, height); break;
+            case 9: painter->drawPixmap(v+1235, 25, 28, 38, nine); break;
+            }
+
+            // Affichage du nombre de caisses
+            painter->drawPixmap(v+1005, 20, 47, 47, box);
+
+            dizaines = (int)(player->getBoxes()/10);
+            switch(dizaines) {
+            case 0: painter->drawPixmap(v+1065, 25, 28, 38, zero); break;
+            case 1: painter->drawPixmap(v+1065, 25, 28, 38, one); break;
+            case 2: painter->drawPixmap(v+1065, 25, 28, 38, two); break;
+            case 3: painter->drawPixmap(v+1065, 25, 28, 38, three); break;
+            case 4: painter->drawPixmap(v+1065, 25, 28, 38, four); break;
+            case 5: painter->drawPixmap(v+1065, 25, 28, 38, five); break;
+            case 6: painter->drawPixmap(v+1065, 25, 28, 38, six); break;
+            case 7: painter->drawPixmap(v+1065, 25, 28, 38, seven); break;
+            case 8: painter->drawPixmap(v+1065, 25, 28, 38, height); break;
+            case 9: painter->drawPixmap(v+1065, 25, 28, 38, nine); break;
+            }
+            switch (player->getBoxes() - dizaines*10) {
+            case 0: painter->drawPixmap(v+1100, 25, 28, 38, zero); break;
+            case 1: painter->drawPixmap(v+1100, 25, 28, 38, one); break;
+            case 2: painter->drawPixmap(v+1100, 25, 28, 38, two); break;
+            case 3: painter->drawPixmap(v+1100, 25, 28, 38, three); break;
+            case 4: painter->drawPixmap(v+1100, 25, 28, 38, four); break;
+            case 5: painter->drawPixmap(v+1100, 25, 28, 38, five); break;
+            case 6: painter->drawPixmap(v+1100, 25, 28, 38, six); break;
+            case 7: painter->drawPixmap(v+1100, 25, 28, 38, seven); break;
+            case 8: painter->drawPixmap(v+1100, 25, 28, 38, height); break;
+            case 9: painter->drawPixmap(v+1100, 25, 28, 38, nine); break;
+            }
         }
     }
 }
@@ -351,6 +354,9 @@ void Scene::gameover()
     update(sceneRect());
 }
 
+/**
+ * Fonction appelée à la fin d'un niveau
+ */
 void Scene::levelComplete()
 {
     if(levelFinished) {
@@ -373,6 +379,9 @@ void Scene::levelComplete()
     }
 }
 
+/**
+ * Fonction appelée au début d'un niveau
+ */
 void Scene::startGame()
 {
     dead = false;

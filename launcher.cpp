@@ -13,12 +13,14 @@ Launcher::Launcher(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // Enlève les bordures de la fenêtre
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
 
     // On place le launcher au centre de l'écran
     move(QApplication::desktop()->screen()->rect().center() - rect().center());
 
+    // Affiche des petits bouts de texte
     int id = QFontDatabase::addApplicationFont(":/fonts/ressources/Fonts/ChickenPie.ttf");
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
     QFont chickenPie(family);
@@ -48,7 +50,7 @@ void Launcher::on_gameButton_clicked()
     window->show();
     window->raise();
     window->activateWindow();
-    this->close();
+    close();
 }
 
 /**
@@ -60,5 +62,5 @@ void Launcher::on_mapEditorButton_clicked()
     window->show();
     window->raise();
     window->activateWindow();
-    this->close();
+    close();
 }

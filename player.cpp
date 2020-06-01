@@ -200,15 +200,20 @@ void Player::jump() {
     if(dead) {
         return;
     }
-    if(fallTimer->isActive()) {     // On ne peut pas sauter si on tombe
-        return;
-    }
+    // Fix pas glorieux de la touche espace qui se déclanche pas
+//    if(fallTimer->isActive()) {     // On ne peut pas sauter si on tombe
+//        qDebug() << "tried to jump but was falling";
+//        return;
+//    }
     else {
         if(jumpAnimation->state() == QAbstractAnimation::Stopped) {
             jumpAnimation->start();
             state = Jumping;
             pixmap = jumpPixmap;
             SoundManager::playSound(sJump);
+        }
+        else {
+            qDebug() << "tried to jump but was jumping";
         }
     }
 }
@@ -225,8 +230,8 @@ void Player::fall() {
 }
 
 /*===== PRIVATE SLOTS =====*/
-void Player::movePlayer() {
-
+void Player::movePlayer()
+{
     checkCollisions();
 
     if(direction == 0) {
@@ -277,8 +282,8 @@ void Player::movePlayer() {
     return;
 }
 
-void Player::jumpPlayer() {
-
+void Player::jumpPlayer()
+{
     checkCollisions();
 
     // Si l'animation est finie, on s'arrête là
@@ -334,9 +339,8 @@ void Player::jumpPlayer() {
     setPos(pos().x(), y);
 }
 
-void Player::fallPlayer() {
-
-    qDebug() << "fall";
+void Player::fallPlayer()
+{
     checkCollisions();
 
     // On met à jour la position du joueur
@@ -362,8 +366,8 @@ void Player::fallPlayer() {
     }
 }
 
-void Player::checkTimer() {
-
+void Player::checkTimer()
+{
     if(dead) {
         return;
     }

@@ -7,6 +7,9 @@ Interface::Interface(Scene *newScene, Player *newPlayer, QScrollBar *s)
     player = newPlayer;
 }
 
+/**
+ * Bouge l'interface de 'dx' pixels
+ */
 void Interface::moveInterface(int dx)
 {
     // Différence de position entre le scroll et le joueur
@@ -37,7 +40,10 @@ void Interface::moveInterface(int dx)
     }
 }
 
+/**
+ * Update uniquement le bandeau du haut de l'écran
+ */
 void Interface::updateHUD()
 {
-    scene->update(scroll->value(), 0, 1280, 100);
+    scene->update(scroll->value(), 0, 1280, 70);
 }

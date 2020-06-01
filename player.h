@@ -1,16 +1,14 @@
 ﻿#ifndef PLAYER_H
 #define PLAYER_H
 
-#include <QAbstractAnimation>
+//#include <QAbstractAnimation>
 #include <QPropertyAnimation>
 #include <QEasingCurve>
-#include <QPainterPath>
-#include <QTimer>
 
 #include "entities/entity.h"
 
 /**
- * @brief Le joueur
+ * Le joueur (c'est toi!)
  */
 class Player : public Entity
 {
@@ -61,7 +59,7 @@ private slots:
 signals:
     void jumpFactorChanged(qreal);  // Signal émit par l'animation de saut lorsque jumpFactor change
     void playerMoved(int);          // Signal émit lorsque le joueur bouge
-    void statsChanged();            // Signal émit lorsque les stats du joueur changent (
+    void statsChanged();            // Signal émit lorsque les stats du joueur changent
 
 private:
     const int velocity = 7;         // Vitesse
