@@ -5,6 +5,9 @@
 #include <QPainter>
 #include <QJsonDocument>
 #include <QFontDatabase>
+#include <QKeyEvent>
+#include <QFile>
+#include <QGraphicsSceneMouseEvent>
 
 #include "physicsengine.h"
 #include "rbodytype.h"
@@ -18,14 +21,12 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 5000, 720, par
     scroll = s;
 
     // Liste des niveaux
-    //    levels.append("/home/tom/qt-workspace/build-QtGame-Desktop-Debug/saves/slimeTest2.json");
     levels.append("://maps/level1.json");
     levels.append("://maps/level2.json");
     levels.append("://maps/level3.json");
+    levels.append("://maps/end.json");
 
     currentLevel = 0;
-
-    startGame();
 
     // "Vue" de la scene ---> 5000 de long et 720 de haut
     setSceneRect(0, 0, 5000, 720);
@@ -35,6 +36,9 @@ Scene::Scene(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 5000, 720, par
 
     // Gestion du son
     new SoundManager();
+
+    // Et zeeee parti
+    startGame();
 }
 
 /**
@@ -218,8 +222,28 @@ void Scene::drawForeground(QPainter *painter, const QRectF &rect)
         painter->drawText(QRect(mid.x(), mid.y()-60, 1280, 50), Qt::AlignCenter, "LEVEL "+QString::number(currentLevel)+" FINISHED");
         chickenPie.setPixelSize(36);
         painter->setFont(chickenPie);
-        painter->drawText(QRect(mid.x(), mid.y(), 1280, 50), Qt::AlignCenter, "Press [SPACE] to go to the next level!");
+        painter->drawText(QRect(mid.x(), mid.y(), 1280, 50), Qt::AlignCenter, "Press [ Space ] to go to the next level!");
         return;
+    }
+    // Affichage des crédits
+    else if(currentLevel == 3) {
+        QPixmap credits(":/hud/ressources/credits.png");
+        painter->drawPixmap(0, 0, credits);
+//            chickenPie.setPixelSize(72);
+//            painter->setPen(QColor(255, 56, 37));
+//            painter->setFont(chickenPie);
+//            painter->drawText(QRect(0, 0, 640, 150), Qt::AlignCenter, "QuteGame");
+//            painter->setPen(QColor(210, 0, 54));
+//            chickenPie.setPixelSize(48);
+//            painter->setFont(chickenPie);
+//            painter->drawText(QRect(0, 150, 640, 100), Qt::AlignCenter, "A Qt-powered game by");
+//            painter->setPen(QColor(152, 0, 63));
+//            chickenPie.setPixelSize(36);
+//            painter->setFont(chickenPie);
+//            painter->drawText(QRect(0, 250, 640, 50), Qt::AlignCenter, "Florent Dumoulin");
+//            painter->drawText(QRect(0, 300, 640, 50), Qt::AlignCenter, "Aymeric Le Moal");
+//            painter->drawText(QRect(0, 350, 640, 50), Qt::AlignCenter, "Olivier Millochau");
+//            painter->drawText(QRect(0, 400, 640, 50), Qt::AlignCenter, "Tom Suchel");
     }
     // Affichage du curseur et du HUD
     else
@@ -349,6 +373,12 @@ void Scene::gameover()
 
     startMobs(false);
 
+    // Si le joueur meurt au dernier level (les credits), on quitte le jeu
+    if(currentLevel == 3) {
+        exit(0);
+    }
+
+    SoundManager::setVolume(25);
     SoundManager::playSound(sGameover);
 
     update(sceneRect());
@@ -368,6 +398,7 @@ void Scene::levelComplete()
     delete player;
     currentLevel++;
 
+    SoundManager::stopMusic();
     SoundManager::playSound(sLevelWin);
 
     startMobs(false);
@@ -400,6 +431,15 @@ void Scene::startGame()
     Interface *interface = new Interface(this, player, scroll);
     connect(player, &Player::playerMoved, interface, &Interface::moveInterface);
     connect(player, &Player::statsChanged, interface, &Interface::updateHUD);
+
+    // Lancement musique
+    switch(currentLevel) {
+    case 0: SoundManager::playSound(mLevel1); break;
+    case 1: SoundManager::playSound(mLevel2); break;
+    case 2: SoundManager::playSound(mLevel3); break;
+    case 3: SoundManager::playSound(mLevel1); break;
+    }
+
 }
 
 void Scene::moveScrollbar()

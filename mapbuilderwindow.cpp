@@ -2,7 +2,6 @@
 #include "ui_mapbuilderwindow.h"
 
 #include <QDesktopWidget>
-#include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QFile>
@@ -22,11 +21,16 @@ MapBuilderWindow::MapBuilderWindow(QWidget *parent) :
     // On place la fenêtre au centre de l'écran
     move(QApplication::desktop()->screen()->rect().center() - rect().center());
 
+    // Création de la scene
     scene = new MapBuilder(ui->graphicsView->horizontalScrollBar(), this);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setFixedSize(QSize(1280, 720));
 
+    // On fait disparaitre les scrollbars et la status bar
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->statusbar->hide();
+
+    ui->currentRBDisplay->setIcon(ui->pGrassPlatformBtn->icon());
 }
 
 MapBuilderWindow::~MapBuilderWindow()
@@ -90,7 +94,7 @@ void MapBuilderWindow::on_actionNouveau_niveau_triggered()
     }
 }
 
-// ------------------ SIGNAUX DES BOUTONS ---------------- //
+// ------------------ SLOTS DES BOUTONS ---------------- //
 
 void MapBuilderWindow::on_bgSkyBtn_clicked()
 {

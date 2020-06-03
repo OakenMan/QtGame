@@ -3,5 +3,6 @@
         <file>maps/level1.json</file>
         <file>maps/level2.json</file>
         <file>maps/level3.json</file>
+        <file>maps/end.json</file>
     </qresource>
 </RCC>

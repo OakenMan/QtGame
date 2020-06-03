@@ -1,9 +1,7 @@
 #include "serialization.h"
 
-#include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
-#include <QGraphicsScene>
 #include <QGraphicsItem>
 
 #include "mapbuilder.h"

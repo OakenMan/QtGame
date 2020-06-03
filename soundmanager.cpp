@@ -9,9 +9,8 @@ QSoundEffect * SoundManager::mobDie;
 QSoundEffect * SoundManager::levelWin;
 QSoundEffect * SoundManager::breakBox;
 QSoundEffect * SoundManager::damage;
-QMediaPlayer * SoundManager::level1;
-QMediaPlayer * SoundManager::level2;
-QMediaPlayer * SoundManager::level3;
+QMediaPlaylist * SoundManager::musics;
+QMediaPlayer * SoundManager::mediaPlayer;
 
 SoundManager::SoundManager(QWidget *parent)
 {
@@ -62,8 +61,16 @@ SoundManager::SoundManager(QWidget *parent)
     damage->setLoopCount(0);
     damage->setVolume(.50f);
 
-    level1 = new QMediaPlayer();
-    level1->setMedia(QUrl("qrc:/sounds/ressources/Sounds/music.mp3"));
+    musics = new QMediaPlaylist();
+    musics->addMedia(QUrl("qrc:/sounds/ressources/Sounds/mii-channel.wav"));
+    musics->addMedia(QUrl("qrc:/sounds/ressources/Sounds/music.mp3"));
+    musics->addMedia(QUrl("qrc:/sounds/ressources/Sounds/doom-ost.mp3"));
+    musics->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+
+    mediaPlayer = new QMediaPlayer();
+    mediaPlayer->setPlaylist(musics);
+    mediaPlayer->setAudioRole(QAudio::GameRole);
+    mediaPlayer->setVolume(75);
 }
 
 SoundManager::~SoundManager()
@@ -74,9 +81,9 @@ SoundManager::~SoundManager()
 void SoundManager::playSound(SoundEffect effect)
 {
     switch(effect) {
-    case mLevel1:       level1->play();         break;
-    case mLevel2:       level2->play();         break;
-    case mLevel3:       level3->play();         break;
+    case mLevel1:       musics->setCurrentIndex(0); mediaPlayer->play(); break;
+    case mLevel2:       musics->setCurrentIndex(1); mediaPlayer->play(); break;
+    case mLevel3:       musics->setCurrentIndex(2); mediaPlayer->play(); break;
     case sJump:         jump->play();           break;
     case sCoin:         coin->play();           break;
     case sGameover:     gameover->play();       break;
@@ -86,6 +93,16 @@ void SoundManager::playSound(SoundEffect effect)
     case sLevelWin:     levelWin->play();       break;
     case sBreakBox:     breakBox->play();       break;
     case sDamage:       damage->play();         break;
-    default:                                    break;
+    default:            mediaPlayer->stop();    break;
     }
+}
+
+void SoundManager::stopMusic()
+{
+    mediaPlayer->stop();
+}
+
+void SoundManager::setVolume(int volume)
+{
+    mediaPlayer->setVolume(volume);
 }

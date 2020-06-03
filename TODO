@@ -2,22 +2,25 @@ BUGS :
 - on ne tombe pas tout le temps dans les trous de 1 blocs
 - on meurt de manière random en s'approchant de l'eau
 - le jeu rame putain
-- des inputs claviers restent bloqués, notament après le respawn
-- la touche espace répond pas A CHAQUE FOIS PILE QUAND ON VA SAUTER AU DESSUS DE L'EAU C'EST SI FRUSTRANT
-- le foreground de fin de niveau ne s'actualise pas directement (ou alors c'est juste très lent??)
-- le player "tombe" à chaque changement de bloc (pas trop gênant mais bon)
+- le player "tombe" à chaque changement de bloc <--- beaucoup de bugs viennent de là
 
 FIXED :
 - les itemBox ne s'update pas quand on les casse
 - les snowHill se transforment en bush à la serialisation (wtf?)
 - le HUD s'actualise pas bien après le respawn
 - le sprite de chute reste quelques fois après être retombé au sol
+- la touche espace répond pas des fois (fixé à la shlag)
+- le foreground de fin de niveau ne s'actualise pas directement
+- des inputs claviers restent bloqués, notament après le respawn
 
 OPTI :
 - supprimer tout ce qui ne sert plus
 - ne pas afficher ce qui n'est pas visible
 
 TODO :
+Urgent :
+- fin du jeu (credits ? retour au menu ?)
+Bonus :
 - mode pour tester les levels dans l'editeur de jeu
 - chrono dans les levels pour faire du SPEEDRUN
 - scoreboard

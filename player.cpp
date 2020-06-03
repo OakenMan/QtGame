@@ -17,7 +17,6 @@ Player::Player():Entity()
 
     //### TO REMOVE IF NO BUGS NOTICED
 //    setFlags(QGraphicsItem::ItemClipsToShape);
-//    setFlags(QGraphicsItem::ItemIsFocusable);
 
     // Initialisation des pixmap
     standPixmap = QPixmap(":/player/ressources/Player/p1_stand.png");
@@ -79,10 +78,7 @@ Player::Player():Entity()
 
 Player::~Player()
 {
-    //### TO REMOVE IF NO BUGS NOTICED
-//    jumpAnimation->stop();
-//    moveTimer->stop();
-//    fallTimer->stop();
+
 }
 
 /*===== SURCHARGES DE MÉTHODES HÉRITÉES =====*/
@@ -212,9 +208,6 @@ void Player::jump() {
             pixmap = jumpPixmap;
             SoundManager::playSound(sJump);
         }
-        else {
-            qDebug() << "tried to jump but was jumping";
-        }
     }
 }
 
@@ -256,12 +249,13 @@ void Player::movePlayer()
     // Si il va à droite
     if(direction > 0 && PhysicsEngine::canMoveRight(this, false)) {
 
+        // Si il dépasse le côté droite de l'écran, il a fini le niveau
         if(pos().x() >= 5000) {
             if(dead) {
                 return;
             }
             dead = true;    // en vrai il est pas vraiment mort mais bon c'est pareil hein
-            QTimer::singleShot(100, Qt::PreciseTimer, this->scene(), SLOT(levelComplete()));
+            QMetaObject::invokeMethod(this->scene(), "levelComplete");
             return;
         }
 
@@ -525,7 +519,7 @@ void Player::die()
     dead = true;
 
     pixmap = hurtPixmap;
-    QTimer::singleShot(500, Qt::PreciseTimer, this->scene(), SLOT(gameover()));
+    QTimer::singleShot(250, Qt::CoarseTimer, this->scene(), SLOT(gameover()));
 }
 
 bool Player::isTouchingFoot(QGraphicsItem *item){

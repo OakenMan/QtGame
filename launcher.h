@@ -1,7 +1,6 @@
 #ifndef LAUNCHER_H
 #define LAUNCHER_H
 
-#include <QWidget>
 #include <QMainWindow>
 
 namespace Ui {

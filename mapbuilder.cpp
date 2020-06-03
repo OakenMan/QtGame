@@ -1,37 +1,7 @@
 #include "mapbuilder.h"
 
-#include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
-
-#include "tiles/grassplatform.h"
-#include "tiles/dirtplatform.h"
-#include "tiles/sandplatform.h"
-#include "tiles/snowplatform.h"
-#include "tiles/stoneplatform.h"
-#include "tiles/castleplatform.h"
-#include "tiles/water.h"
-#include "tiles/lava.h"
-#include "tiles/box.h"
-#include "tiles/boxalt.h"
-#include "tiles/boxempty.h"
-#include "tiles/boxcoin.h"
-#include "tiles/boxitem.h"
-#include "tiles/signexit.h"
-#include "tiles/signleft.h"
-#include "tiles/signright.h"
-#include "tiles/bush.h"
-#include "tiles/cactus.h"
-#include "tiles/rock.h"
-#include "tiles/plant.h"
-#include "tiles/snowhill.h"
-#include "tiles/purpleplant.h"
-
-#include "entities/coinbronze.h"
-#include "entities/coinsilver.h"
-#include "entities/coingold.h"
-
-#include "player.h"
 
 MapBuilder::MapBuilder(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 5000, 720, parent)
 {
@@ -40,10 +10,6 @@ MapBuilder::MapBuilder(QScrollBar *s, QObject *parent):QGraphicsScene(0, 0, 5000
     setSceneRect(0, 0, 5000, 720);
 
     setCurrentBlock(pGrassPlatform);
-
-//    Player *player = new Player();
-//    addItem(player);
-//    player->setPos(48, 672 - player->boundingRect().height());
 }
 
 void MapBuilder::setCurrentBlock(RBodyType block)
@@ -128,7 +94,6 @@ void MapBuilder::deleteBlock(QPointF pos)
 
 void MapBuilder::placeGround()
 {
-//    setCurrentBlock(pGrassPlatform);
     for(int i=0; i<5048; i+=48) {
         placeBlock(QPointF(i, 672));
     }

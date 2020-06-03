@@ -964,7 +964,7 @@
         </property>
         <property name="icon">
          <iconset resource="ressources.qrc">
-          <normaloff>:/enemies/ressources/Enemies/fishSwim2.png</normaloff>:/enemies/ressources/Enemies/fishSwim2.png</iconset>
+          <normaloff>:/enemies/ressources/Enemies/fishSwim1.png</normaloff>:/enemies/ressources/Enemies/fishSwim1.png</iconset>
         </property>
         <property name="iconSize">
          <size>

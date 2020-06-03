@@ -2,17 +2,6 @@
 #define PHYSICSENGINE_H
 
 #include "scene.h"
-#include "player.h"
-
-#include <QGraphicsScene>
-#include <QGraphicsItem>
-#include <QGraphicsSceneMouseEvent>
-#include <QKeyEvent>
-#include <QTimer>
-#include <QAbstractAnimation>
-#include <QPropertyAnimation>
-#include <QEasingCurve>
-#include <QScrollBar>
 
 #include "entities/entity.h"
 

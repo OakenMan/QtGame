@@ -69,7 +69,7 @@ void GenericPlatform::updatePixmap()
         pixmap = center;
     }
     else if(tileOnBottom) {
-//        pixmap = QPixmap(":/tiles/ressources/Tiles/grassMid");
+
     }
 }
 

@@ -17,6 +17,7 @@ Poker::Poker():GenericMob()
 
     animationTimer = new QTimer();
     animationTimer->setInterval(3000);
+    animationTimer->setTimerType(Qt::CoarseTimer);
 
     outside = false;
     currentHeight = 40;

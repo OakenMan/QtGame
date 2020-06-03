@@ -19,6 +19,7 @@ Snail::Snail()
 
     animationTimer = new QTimer();
     animationTimer->setInterval(5000);
+    animationTimer->setTimerType(Qt::CoarseTimer);
 
     inShell = false;
 

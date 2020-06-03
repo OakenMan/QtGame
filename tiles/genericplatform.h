@@ -1,8 +1,6 @@
 #ifndef GENERICPLATFORM_H
 #define GENERICPLATFORM_H
 
-#include <QPixmap>
-
 #include "tile.h"
 
 class GenericPlatform : public Tile

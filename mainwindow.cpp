@@ -2,10 +2,6 @@
 #include "ui_mainwindow.h"
 
 #include <QDesktopWidget>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QJsonDocument>
-#include <QDebug>
 
 #include "serialization.h"
 #include "rigidbody.h"
@@ -30,39 +26,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->statusBar->hide();
     ui->mainToolBar->hide();
-    //    ui->menuBar->hide();      // à décommenter pour la version finale
+    ui->menuBar->hide();
 
+    // Pour pouvoir récupérer les inputs souris depuis la scene
     ui->graphicsView->setMouseTracking(true);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::on_actionLoad_map_triggered()
-{
-    QString fileName = QFileDialog::getOpenFileName(this, "Open the file");
-
-    QFile loadFile(fileName);
-
-    if(!loadFile.open(QIODevice::ReadOnly)) {
-        QMessageBox::warning(this, "Warning", "Cannot open file: " + loadFile.errorString());
-        return;
-    }
-
-    // On reset le niveau actuel
-    QList<QGraphicsItem*> list = scene->items(scene->sceneRect());
-    for(QGraphicsItem *item : list) {
-        delete item;
-    }
-
-    QByteArray loadData = loadFile.readAll();
-
-    QJsonDocument loadDoc(QJsonDocument::fromJson(loadData));
-    Serialization::loadMap(loadDoc, scene);
-
-    scene->startMobs(true);
-
-    ui->graphicsView->horizontalScrollBar()->setValue(0);
 }

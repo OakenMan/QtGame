@@ -2,18 +2,13 @@
 #define SOUNDMANAGER_H
 
 #include <QMediaPlayer>
-#include <QMediaContent>
-#include <QMediaResource>
+#include <QMediaPlaylist>
 #include <QSoundEffect>
 
 #include "soundeffect.h"
 
 /**
  * Classe qui gère les effets sonores et les musiques.
- * Pour l'utiliser dans une autre classe :
- *  SoundManager sm = new SoundManager();
- *  sm->playSoundEffect(SoundEffect);
- * Liste des effets dans "soundeffect.h"
  */
 class SoundManager: public QObject
 {
@@ -24,6 +19,8 @@ public:
     ~SoundManager();
 
     static void playSound(SoundEffect);
+    static void stopMusic();
+    static void setVolume(int volume);
 
 private:
 
@@ -39,15 +36,10 @@ private:
     static QSoundEffect *damage;
 
     // Musiques
-    static QMediaPlayer *level1;
-    static QMediaPlayer *level2;
-    static QMediaPlayer *level3;
+    static QMediaPlaylist *musics;
 
-//signals:
-//   void stopMusic();
-
-//public slots:
-//   void playSoundEffect(SoundEffect);
+    // Media Player
+    static QMediaPlayer *mediaPlayer;
 };
 
 #endif // SOUNDMANAGER_H

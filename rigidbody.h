@@ -27,7 +27,7 @@ public:
 
 protected:
     RBodyType bodyType;
-    QPixmap pixmap; // Texture affichées à l'écran
+    QPixmap pixmap;         // Texture affichée à l'écran
     bool solid;
 };
 
